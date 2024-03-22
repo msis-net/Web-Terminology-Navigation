@@ -1,0 +1,17 @@
+---
+import Head from "@/layouts/_head.astro";
+interface Props {
+	title: string;
+}
+
+const { title } = Astro.props;
+---
+<!DOCTYPE html>
+<html lang="">
+<head>
+  <Head title={title}/>
+</head>
+<body>
+  <slot />
+</body>
+</html>

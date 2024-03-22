@@ -1,0 +1,31 @@
+@charset "UTF-8";
+:root {
+  --header-height: 68px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html {
+  height: 100hv;
+}
+
+body {
+  font-family: "Hiragino Kaku Gothic Pro", "ヒラギノ角ゴ Pro W3", メイリオ, Meiryo, "Helvetica Neue", Helvetica, Arial, sans-serif;
+  height: 100vh;
+}
+
+header {
+  height: var(--header-height);
+}
+
+.content-wrapp {
+  height: calc( 100% - var(--header-height) );
+  background-color: #13997d;
+}
+
+/*Navigateのタブ表示部分の高さ*/
+.tab-height-nav {
+  height: calc( 100% - 64px);
+}

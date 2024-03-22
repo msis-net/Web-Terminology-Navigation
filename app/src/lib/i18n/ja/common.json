@@ -1,0 +1,11 @@
+{
+	"header": {
+		"title": "Web用語ナビゲータ"
+	},
+	"navigate": {
+		"select-00": {
+			"value": "none",
+			"label": "CodeSystemを選択してください"
+		}
+	}
+}
