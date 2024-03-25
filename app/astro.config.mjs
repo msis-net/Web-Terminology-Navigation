@@ -15,7 +15,7 @@ export default defineConfig({
     format: 'file'
   },
   server: {
-   host: false //ネットワーク全ての接続を許可(本番時)
+   host: true //ネットワーク全ての接続を許可(本番時)
   },
   output: "server",
   adapter: node({

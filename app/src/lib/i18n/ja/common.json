@@ -5,7 +5,13 @@
 	"navigate": {
 		"select-00": {
 			"value": "none",
-			"label": "CodeSystemを選択してください"
-		}
+			"label": "CodeSystemを選択"
+		},
+		"SearchWord":"検索（３文字以上）",
+		"Taxonomy":"分類",
+		"Search":"検索",
+		"Bookmarks":"ブックマーク",
+		"History":"履歴"
+		
 	}
 }

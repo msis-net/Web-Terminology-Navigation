@@ -1,6 +1,6 @@
 <script>
   import { loadTranslations, t, locale, locales } from "@/lib/i18n/i18n";
-  import { language, CodeSystem, Tabname } from "./stores.js";
+  import { language, CodeSystem, Tabname, OpenTab } from "./stores.js";
 
   loadTranslations($language, "/");
 
@@ -9,8 +9,8 @@
   const onChange = () => {
     locale.set($language);
   };
-
-  console.log("locales", locale);
+  console.log("language", $language);
+  console.log("OpenTab", $OpenTab);
 </script>
 
 <h1>
@@ -28,8 +28,8 @@
     <li><a href="/">CONTACT</a></li>
     <li>
       <select bind:value={$language} on:change={onChange}>
+        <option value="en" selected>en</option>
         <option value="ja">ja</option>
-        <option value="en">en</option>
       </select>
     </li>
   </ul>

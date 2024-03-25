@@ -1,7 +1,7 @@
 <script>
   import { t } from "@/lib/i18n/i18n";
   import { Resuoces } from "./stores.js";
-  import NavTaxonomyList from "./nav_taxonomy_list.svelte";
+  import NavTest9List from "./nav_test9_list.svelte";
 
   let title = $t("common.navigate.select-00.label");
   let concept = [];
@@ -20,21 +20,21 @@
       if ($Resuoces.id) {
         title = $Resuoces.id;
       } else {
-        title = "";
+        title = $t("common.navigate.select-00.label");
       }
 
       if ($Resuoces.concept) {
         concept = $Resuoces.concept;
+        console.log("concept", concept.length);
         chunkSize = 100;
-
         MAX = concept.length;
       } else {
         concept = {};
       }
 
-      console.log("concept", MAX, chunkSize, concept);
+      //console.log("concept", MAX, chunkSize, concept);
     } else {
-      title = "";
+      title = $t("common.navigate.select-00.label");
       concept = {};
     }
   }
@@ -94,7 +94,7 @@
    {#key}は指定した値が変わったときにブロック内の要素も更新
   -->
   {#key concept}
-    <NavTaxonomyList
+    <NavTest9List
       {nextChunk}
       {previousChunk}
       {addObject}

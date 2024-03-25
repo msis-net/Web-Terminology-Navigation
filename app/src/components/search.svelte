@@ -1,7 +1,7 @@
 <script>
   import { t } from "@/lib/i18n/i18n";
-  import { Resuoces } from "./stores.js";
-  import NavTaxonomyList from "./nav_taxonomy_list.svelte";
+  import { SearchObj } from "./stores.js";
+  import SearchList from "./search_list.svelte";
 
   let title = $t("common.navigate.select-00.label");
   let concept = [];
@@ -16,15 +16,15 @@
   $: {
     if (initialValue < MIN) initialValue = MIN;
     if (MAX < initialValue) initialValue = MAX;
-    if ($Resuoces) {
-      if ($Resuoces.id) {
-        title = $Resuoces.id;
+    if ($SearchObj) {
+      if ($SearchObj.id) {
+        title = $SearchObj.id;
       } else {
         title = "";
       }
 
-      if ($Resuoces.concept) {
-        concept = $Resuoces.concept;
+      if ($SearchObj.concept) {
+        concept = $SearchObj.concept;
         chunkSize = 100;
 
         MAX = concept.length;
@@ -94,7 +94,7 @@
    {#key}は指定した値が変わったときにブロック内の要素も更新
   -->
   {#key concept}
-    <NavTaxonomyList
+    <SearchList
       {nextChunk}
       {previousChunk}
       {addObject}

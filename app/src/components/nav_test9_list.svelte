@@ -1,6 +1,6 @@
 <script>
   import { tick } from "svelte";
-  import NavTaxonomyChilds from "@/components/nav_taxonomy_childs.svelte";
+  import NavTest9Child from "./nav_test9_child.svelte";
   export let previousChunk = undefined;
   export let nextChunk = undefined;
   export let addObject = undefined;
@@ -193,7 +193,12 @@
   {#key json}
     {#each json as value, i}
       <!--slot prop={value} {i} /-->
-      <NavTaxonomyChilds obj={value} {value} id={value.counter} indent={1} />
+      <NavTest9Child
+        obj={value}
+        title={value.display}
+        id={value.counter}
+        indent={1}
+      />
     {/each}
   {/key}
 </div>

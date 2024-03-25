@@ -6,6 +6,11 @@
 		"select-00": {
 			"value": "none",
 			"label": "Select a CodeSystem"
-		}
+		},
+		"SearchWord":"Search Word (3 or more characters)",
+		"Taxonomy":"Taxonomy",
+		"Search":"Search",
+		"Bookmarks":"Bookmarks",
+		"History":"History"
 	}
 }

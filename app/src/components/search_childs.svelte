@@ -2,7 +2,7 @@
   import { tick } from "svelte";
   import { fade } from "svelte/transition";
   import { JsxFlags } from "typescript";
-  import NavTaxonomyChilds from "@/components/nav_taxonomy_childs.svelte";
+  import SearchChilds from "./search_childs.svelte";
 
   export let value = "";
   export let indent = 0;
@@ -34,6 +34,7 @@
     //await tick();
     //console.log(json, Object.keys(json).length);
   }
+  eventObject();
 </script>
 
 <hr />
@@ -51,11 +52,7 @@
       {#if typeof json[key] == "object"}
         {#if key !== "concept"}
           <ul class="ml-{indent + 1}">
-            <NavTaxonomyChilds
-              obj={json[key]}
-              value={key}
-              indent={indent + 1}
-            />
+            <SearchChilds obj={json[key]} value={key} indent={indent + 1} />
           </ul>
         {/if}
       {:else if key !== "count"}
@@ -65,7 +62,7 @@
 
     {#if concept}
       {#each concept as item, i}
-        <NavTaxonomyChilds obj={item} value={item} indent={indent + 1} />
+        <SearchChilds obj={item} value={item} indent={indent + 1} />
       {/each}
     {/if}
   </ul>
