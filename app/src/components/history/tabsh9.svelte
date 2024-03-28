@@ -7,9 +7,9 @@
     Tabname,
     getJonResource,
     Resuoces,
-  } from "./stores.js";
+  } from "../stores.js";
 
-  import NavTest4 from "@/components/nav_test4.svelte";
+  import NavTest9 from "./nav_test9.svelte";
   let openTab = 1;
 
   function toggleTabs(tabNumber, tabName) {
@@ -68,7 +68,7 @@
     id="tab1"
     class="h-full bg-gray-100 {openTab === 1 ? 'visible' : 'hidden'}"
   >
-    <NavTest4 resdata={$Resuoces} />
+    <NavTest9 resdata={$Resuoces} />
   </div>
 
   <div

@@ -1,7 +1,7 @@
 <script>
   import { t } from "@/lib/i18n/i18n";
-  import { Resuoces } from "./stores.js";
-  import NavTest7List from "./nav_test7_list.svelte";
+  import { Resuoces } from "../stores.js";
+  import NavTest9List from "./nav_test9_list.svelte";
 
   let title = $t("common.navigate.select-00.label");
   let concept = [];
@@ -25,6 +25,7 @@
 
       if ($Resuoces.concept) {
         concept = $Resuoces.concept;
+        console.log("concept", concept.length);
         chunkSize = 100;
         MAX = concept.length;
       } else {
@@ -54,7 +55,7 @@
 
   function nextChunk(lastValue) {
     const _last = lastValue ?? initialValue - 1;
-    console.log("▶nextChunk:", _last, lastValue, MAX, chunkSize, initialValue);
+    //console.log("▶nextChunk:", _last, lastValue, MAX, chunkSize, initialValue);
     if (MAX <= _last) return [];
     let array = [];
     for (let i = 0; i < chunkSize; i++) {
@@ -63,22 +64,28 @@
       if (index < concept.length) array.push(_last + (i + 1));
       if (MAX <= getEndOfArray(array)) return array;
     }
-    console.log("nextChunk#66:", array);
+    //console.log("nextChunk#66:", array);
     return array;
   }
 
   function addObject(array) {
-    console.log("addObj", array);
+    //console.log("addObj", array);
     if (!array) return [];
     let items = [];
 
     array.forEach(function (i) {
       let temp = concept[i];
-      temp["no"] = i + 1;
+      //CodeSystem.countを連番として追加
+      //https://hl7.org/fhir/R4/codesystem-definitions.html#CodeSystem.count
+      temp["count"] = i + 1;
       items.push(temp);
     });
     //console.log("items", items);
     return items;
+  }
+
+  function TEST() {
+    console.log("TEST");
   }
 </script>
 
@@ -87,17 +94,13 @@
    {#key}は指定した値が変わったときにブロック内の要素も更新
   -->
   {#key concept}
-    <NavTest7List
+    <NavTest9List
       {nextChunk}
       {previousChunk}
       {addObject}
       {chunkSize}
       let:prop={value}
-    >
-      <div class="row" style:background-color={`hsl(${value},90%,80%)`}>
-        {value.no}:{value.code}
-      </div>
-    </NavTest7List>
+    />
   {/key}
 </div>
 
@@ -106,13 +109,5 @@
     border: solid 0px;
     box-sizing: border-box;
     border-radius: 0px;
-  }
-  .row {
-    border-top: 1px solid rgba(0, 0, 0, 0.1);
-    /*height: 20px;*/
-    width: 100%;
-    /*padding: 0px;*/
-    box-sizing: border-box;
-    /* text-align: center;*/
   }
 </style>

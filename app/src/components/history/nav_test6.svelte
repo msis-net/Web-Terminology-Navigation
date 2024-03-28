@@ -1,7 +1,7 @@
 <script>
   import { t } from "@/lib/i18n/i18n";
-  import NavTest5Scroll from "./nav_test5_scroll.svelte";
-  import { Resuoces } from "./stores.js";
+  import { Resuoces } from "../stores.js";
+  import NavTest6List from "./nav_test6_list.svelte";
 
   let title = $t("common.navigate.select-00.label");
   let concept = [];
@@ -31,7 +31,7 @@
         concept = {};
       }
 
-      console.log("concept", MAX, chunkSize, concept);
+      //console.log("concept", MAX, chunkSize, concept);
     } else {
       title = $t("common.navigate.select-00.label");
       concept = {};
@@ -42,7 +42,7 @@
 
   function previousChunk(lastValue) {
     const _last = lastValue ?? initialValue + 1;
-    console.log("previousChunk", _last, MIN, chunkSize);
+    //console.log("previousChunk", _last, MIN, chunkSize);
     if (_last <= MIN) return [];
     let array = [];
     for (let i = 0; i < chunkSize; i++) {
@@ -54,7 +54,7 @@
 
   function nextChunk(lastValue) {
     const _last = lastValue ?? initialValue - 1;
-    console.log("nextChunkx", _last, MAX, chunkSize);
+    console.log("▶nextChunk:", _last, lastValue, MAX, chunkSize, initialValue);
     if (MAX <= _last) return [];
     let array = [];
     for (let i = 0; i < chunkSize; i++) {
@@ -63,7 +63,7 @@
       if (index < concept.length) array.push(_last + (i + 1));
       if (MAX <= getEndOfArray(array)) return array;
     }
-    console.log("nextChunk", array);
+    console.log("nextChunk#66:", array);
     return array;
   }
 
@@ -71,12 +71,13 @@
     console.log("addObj", array);
     if (!array) return [];
     let items = [];
-    for (let i in array) {
-    }
+
     array.forEach(function (i) {
-      items.push(concept[i]);
+      let temp = concept[i];
+      temp["no"] = i + 1;
+      items.push(temp);
     });
-    console.log("items", items);
+    //console.log("items", items);
     return items;
   }
 </script>
@@ -86,17 +87,11 @@
    {#key}は指定した値が変わったときにブロック内の要素も更新
   -->
   {#key concept}
-    <NavTest5Scroll
-      {nextChunk}
-      {previousChunk}
-      {addObject}
-      let:prop={value}
-      let:id
-    >
+    <NavTest6List {nextChunk} {previousChunk} {addObject} let:prop={value}>
       <div class="row" style:background-color={`hsl(${value},90%,80%)`}>
-        {id}:{value}
+        {value.no}:{value.code}
       </div>
-    </NavTest5Scroll>
+    </NavTest6List>
   {/key}
 </div>
 

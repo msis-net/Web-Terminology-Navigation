@@ -3,17 +3,20 @@
   import {
     CodeSystem,
     Resuoces,
+    SearchObj,
+    Inputstr,
     language,
     OpenTab,
-    SearchObj,
   } from "./stores.js";
+  import Search from "./search.svelte";
   import { readonly } from "svelte/store";
 
   let selectof = {};
   let count = 0;
   const onChange = () => {
     $OpenTab = 1;
-    $Resuoces = "";
+    $Resuoces = {};
+    $SearchObj = {};
     //console.log("selectof", selectof);
     $CodeSystem = selectof.id;
     const name = selectof.name;
@@ -145,55 +148,25 @@
   let initval = selectof;
 
   let word = "";
+  let searchData;
+  //検索Popup
+  let schpanel = "invisible";
 
-  function SearchWord() {
+  const SearchWord = () => {
     console.log("word", word);
-    if (!word) return;
-    //$Resuoces = {};
-    // toggleTabs("2", "Search");
+    $SearchObj = $Resuoces;
+    let tmpConcept = [];
+    for (let i in $Resuoces["concept"]) {
+      let tmpObj = $Resuoces["concept"][i];
 
-    try {
-      const items = $Resuoces["concept"];
-      let concept = [];
-      for (let item in items) {
-        console.log(item, items[item]);
-        let tmp1 = items[item];
-        let keys = Object.keys(tmp1);
-        keys.forEach((key) => {
-          let tmp2 = tmp1[key];
-
-          if (typeof tmp2 == "object") {
-          } else {
-            console.log("key", key, tmp2);
-            let value = tmp2;
-            if (typeof tmp2 !== "text") {
-              value = tmp2.toString();
-            }
-            try {
-              let reg = new RegExp(word, "g");
-              let result = value.match(reg);
-              if (result) {
-                let newStr = value.replace(reg, "<b>" + word + "</b>");
-                console.log("indexOf:", word, key, newStr);
-              }
-              //console.log("value", value);
-            } catch (e) {
-              console.error(e);
-            }
-          }
-        });
-        $OpenTab = 2;
+      let schStr = JSON.stringify(tmpObj);
+      if (schStr.indexOf(word) !== -1) {
+        console.log("tmpObj", tmpObj, schStr.indexOf(word));
+        tmpConcept.push(tmpObj);
       }
-      console.log("concept:", concept);
-      $SearchObj = $Resuoces;
-      console.log("$SearchObj:", $SearchObj);
-      console.log("$OpenTab:", $OpenTab);
-    } catch (e) {
-      console.error(e);
     }
-  }
-
-  function ChekConceptElements(word) {}
+    $SearchObj = tmpConcept;
+  };
 </script>
 
 <div class="max-w-sm mx-auto mb-2">
@@ -217,8 +190,8 @@
     </div>
     <button class="text-[0.8em] h-4 leading-4 m-2 p-1"></button>
   </div>
-
-  <div class="mt-2">
+  <!--検索文字-->
+  <div class="relative group mt-2">
     <input
       class="w-full bg-white border border-gray-300 text-gray-900 text-sm rounded-md p-1"
       placeholder={selectof == initval
@@ -232,5 +205,30 @@
         }
       }}
     />
+    <div
+      class="{schpanel} opacity-100 absolute w-full bg-white text-gray-800 border border-gray-300 rounded-md shadow-lg z-10 overflow-y-auto max-h-[450px]"
+    >
+      <header class="h-6">
+        <ul class="mx-2 absolute right-0">
+          <li>
+            <button
+              class="text-gray-500 text-[1.2em]"
+              on:click={() => (schpanel = "invisible")}>×</button
+            >
+          </li>
+        </ul>
+      </header>
+      <div>
+        <Search bind:searchData />
+      </div>
+    </div>
+    <!--
+<div
+      class="opacity-0 invisible group-hover:opacity-100 group-hover:visible absolute w-48 mt-2 bg-white text-gray-800 border border-gray-300 rounded-lg shadow-lg py-2 z-10"
+    >
+      <p class="px-4 py-2">This is a popover component.</p>
+      <p class="px-4 py-2">You can customize it with your content.</p>
+    </div>
+    -->
   </div>
 </div>

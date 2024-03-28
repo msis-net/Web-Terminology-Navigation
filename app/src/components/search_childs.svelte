@@ -1,7 +1,6 @@
 <script>
   import { tick } from "svelte";
   import { fade } from "svelte/transition";
-  import { JsxFlags } from "typescript";
   import SearchChilds from "./search_childs.svelte";
 
   export let value = "";
@@ -39,14 +38,14 @@
 
 <hr />
 <!--div>{!value ? ["選択してください"] : value}</div-->
-<button on:click={eventObject} class="ml-{indent} w-full text-left">
+<button on:click={eventObject} class="ml-{indent} text-left">
   <span class="arrow col-{indent}" class:arrowDown>&#x25b6</span>
   {obj["count"] ? `${obj["count"]}:` : ""}
   {value.display ? `${value.display}` : `${JSON.stringify(value)}`}
 </button>
 
 {#if json}
-  <ul class="">
+  <ul class="ml-4">
     {#each Object.keys(json) as key, i}
       {@const item = json[key]}
       {#if typeof json[key] == "object"}
@@ -66,7 +65,6 @@
       {/each}
     {/if}
   </ul>
-  <hr />
 {/if}
 
 <style>

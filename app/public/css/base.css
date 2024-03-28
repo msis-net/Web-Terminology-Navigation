@@ -27,5 +27,5 @@ header {
 
 /*Navigateのタブ表示部分の高さ*/
 .tab-height-nav {
-  height: calc( 100% - 96px);
+  height: calc( 100% - 102px);
 }

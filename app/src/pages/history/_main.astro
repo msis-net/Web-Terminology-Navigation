@@ -1,0 +1,90 @@
+---
+const { label } = Astro.props;
+---
+
+<div class="font-bold text-blue-700"><a href="/\">◀{label}</a></div>
+<div class="text-[0.8em]">
+  <lo class="border-t-2">
+    <ul>
+      <div class="font-bold">開発環境</div>
+      <li class="font-bold">アウトラインフレームワーク</li>
+      <div class="ml-3 font-bold text-blue-700"><a href="https://astro.build/" class="href" target="_blank">ASTRO(アストロ)</a></div>
+      <div class="ml-3">理由:HTMLの静的ジェネレータ。レイアウト構成全体の管理効率が上がる。多種のインテグレーションにも対応。</div>
+      <li class="font-bold">インラインフレームワーク</li>
+      <div class="ml-3 font-bold text-blue-700"><a href="https://svelte.jp/" target="_blank" class="href">SVELTE(スベルテ)</a></div>
+      <div class="ml-3">理由:JavaScriptライブラリ。React/Vueが人気だがこれらと比べて新しく効率的なコーディング開発が可能。</div>
+      <div class="ml-3 font-bold text-blue-700"><a href="https://tailwindcss.com/" target="_blank" class="href">TailWindCss(テイルウィンドCSS)</a></div>
+      <div class="ml-3">理由:CSSフレームワーク。他フレームワークに比べて全体レイアウトの決まりは無く、個々のオブジェクトに対するデザインが簡単。</div>
+    </ul>
+    <div class="text-right">
+      ※2024/02/29:過去の経験と現在のトレンド（今後の動向）を踏まえて厳選。
+
+    </div>
+  </lo>
+  <hr class="border-t-2">
+  <lo class="border-t-2">
+    <li>全体レイアウト構成、iframeは非推奨の為利用しない、Flexを利用（但しまだ縦区切り線の移動はできない）</li>
+    <li>アプリ本体のローカライズ機能組込。以後レイアウトを実装する場合は留意する(実装方法は簡単：/lib/i18n/参照）</li>
+    <li>Readable機能の評価:通常機能では、あたりまえにheap発生</li>
+  </lo>
+  <ul class="border-t-2">
+    <div class="font-bold text-blue-700"><a href="/history/hist1">◀ hist1</a></div>
+    <li>大量のリスト表示不可、利用メモリ1G弱（推測:ブラウザ割り当てメモリ容量超えでheap発生でクラッシュしている）</li>
+    <li>要素リストの削除できない</li>
+  </ul>
+
+  <ul class="border-t-2">
+    <div class="font-bold text-blue-700"><a href="/history/hist2">◀ hist2</a></div>
+    <li>大量のリスト表示不可、利用メモリ1G弱（推測:最大容量超えでheap発生でクラッシュ、同上）</li>
+    <li>要素リストの削除可</li>
+  </ul>
+
+  <ul class="border-t-2">
+    <div class="font-bold text-blue-700"><a href="/history/hist3">◀ hist3</a></div>
+    <li>リスト表示まで可能、利用メモリは100MB程度。👍
+    </li>
+    <li>
+      細切れにしたデータの非同期処理(Promise)を評価。
+    </li>
+    <li>動作詳細は未調整のままだが検証は充分なので次段階へ進む</li>
+
+  </ul>
+
+  <ul class="border-t-2">
+    <div class="font-bold text-blue-700"><a href="/history/hist4">◀ hist4</a></div>
+    <li>大量のリスト表示対応UIの考察</li>
+    <li>ユーザスクロールによる前後レコードの遅延読み込み</li>
+    <li>
+      <a href="https://svelte.dev/repl/7b2790594b144c67bc4e2cd9d252ad3a?version=3.59.1" class="href" target="_blank">[参照]Qiita用_動的スクロール</a
+      >
+    </li>
+  </ul>
+
+  <ul class="border-t-2">
+    <div class="font-bold text-blue-700"><a href="/history/hist5">◀ hist5</a></div>
+    <li>実装：ユーザスクロールによる前後レコードの遅延読み込み。表示トータル件数が増えるとメモリは累積（当然）する</li>
+  </ul>
+  <ul class="border-t-2">
+    <div class="font-bold text-blue-700"><a href="/history/hist6">◀ hist6</a></div>
+    <li>調整：画面拡大で縦スクロールが消えると次レコードの読み込みができないのでResizeによる対応を追加
+    </li>
+  </ul>
+  <ul class="border-t-2">
+    <div class="font-bold text-blue-700"><a href="/history/hist7">◀ hist7</a></div>
+    <li>末尾に100行ずつ読込むと同時に、先頭の100行をレンダリングからはずす。メモリ最小で👍
+    </li>
+    <li>あとは、Reverseを実装する。</li>
+  
+  </ul>
+  <ul class="border-t-2">
+    <div class="font-bold text-blue-700"><a href="/history/hist8">◀ hist8</a></div>
+    <li>表示部分および前後をユーザー操作（Scroll）を監視してレンダリング：完成形β版👍項目のクリック不可
+    </li>
+    <li>さらにBIgDataを処理するにはinndexedDBを利用（予定）</li>
+  </ul>
+  <ul class="border-t-2">
+    <div class="font-bold text-blue-700"><a href="/history/hist9">◀ hist9</a></div>
+    <li>Taxonomyの完成形（細部未調整）。メモリ10~100MB.👍Very Good Stable!!👍</li>
+  </ul>
+</ul>
+</div>

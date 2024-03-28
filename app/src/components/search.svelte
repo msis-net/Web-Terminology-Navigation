@@ -23,8 +23,8 @@
         title = "";
       }
 
-      if ($SearchObj.concept) {
-        concept = $SearchObj.concept;
+      if ($SearchObj.length > 0) {
+        concept = $SearchObj;
         chunkSize = 100;
 
         MAX = concept.length;

@@ -1,24 +1,26 @@
 <script>
+  import { onMount } from "svelte";
+  import { ImportsNotUsedAsValues } from "typescript";
   import {
     language,
     CodeSystem,
     Tabname,
     getJonResource,
     Resuoces,
-  } from "./stores.js";
-  import NavTest1 from "./nav_test1.svelte";
+  } from "../stores.js";
 
+  import NavTest5 from "./nav_test5.svelte";
   let openTab = 1;
 
   function toggleTabs(tabNumber, tabName) {
     openTab = tabNumber;
     $Tabname = tabName;
   }
+
   //Resuocesの変更が発生した時（DropDownが変更）
 </script>
 
 <!--親ノードでflex適用されている-->
-
 <div class="font-mono">
   <nav class=" text-sm">
     <button
@@ -66,10 +68,7 @@
     id="tab1"
     class="h-full bg-gray-100 {openTab === 1 ? 'visible' : 'hidden'}"
   >
-    <div>
-      <NavTest1 resdata={$Resuoces} />
-      <!--<div class="text-[0.6em]">{JSON.stringify($Resuoces)}</div>-->
-    </div>
+    <NavTest5 resdata={$Resuoces} />
   </div>
 
   <div

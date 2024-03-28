@@ -6,7 +6,6 @@
 
   export let obj;
   $: json = {};
-  let store = {};
   let loadedItems = [];
   let count = {};
   let counter = 0;

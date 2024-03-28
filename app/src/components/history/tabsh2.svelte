@@ -7,7 +7,7 @@
     Tabname,
     getJonResource,
     Resuoces,
-  } from "./stores.js";
+  } from "../stores.js";
 
   import NavTest2 from "./nav_test2.svelte";
 

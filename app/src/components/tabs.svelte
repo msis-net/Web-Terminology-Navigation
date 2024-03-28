@@ -32,7 +32,6 @@
   <nav class=" text-sm">
     <button
       type="button"
-      id="btn1"
       on:click={() => toggleTabs(1, "Taxonomy")}
       class="px-2 {$OpenTab === 1
         ? 'transition-all font-bold text-blue-600 border-y-2 border-blue-600'
@@ -82,11 +81,7 @@
     id="tab2"
     class="h-full bg-green-100 {$OpenTab === 2 ? 'visible' : 'hidden'}"
   >
-    <div>
-      <div>CodeSystem {$CodeSystem}</div>
-      <div>Tabname {$Tabname}</div>
-      <Search {$SearchObj} />
-    </div>
+    <Search {$SearchObj} />
   </div>
 
   <div

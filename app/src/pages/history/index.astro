@@ -1,11 +1,12 @@
 ---
-import Layout from '../layouts/Layout.astro';
+import Layout from '@/layouts/Layout.astro';
 import Header from '@/components/header.svelte';
 
 import Dropdoan from '@/components/dropdown.svelte'
-import Tabsh1 from '@/components/tabsh1.svelte'
 
-import Main from '@/pages/_main.astro'
+import Tabs from '@/components/tabs.svelte'
+
+import Main from '@/pages/history/_main.astro'
 import Aside from '@/pages/_aside.astro'
 
 
@@ -13,14 +14,14 @@ const appname = 'Web Terminorogy Navigater';
 ---
 
 <Layout title={appname}>
-	<header class="flex items-center bg-purple-300 p-2">
+	 <header class="flex items-center bg-purple-300 p-2">
 		<Header title="test" client:only="svelte"/>
 	 </header>
 	  <div class="content-wrapp flex bg-white">
 		
 		<nav class="order-first w-96 p-2 overflow-y-auto m-0">
 			<Dropdoan client:only="svelte" />
-			<Tabsh1 client:only="svelte" />
+			<Tabs client:only="svelte" />
 		</nav>
 		<div class="w-1 bg-slate-300 cursor-col-resize"></div>
 		<main class="flex-1 bg-green-100 p-2 overflow-y-auto">
