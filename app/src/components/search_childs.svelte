@@ -1,6 +1,7 @@
 <script>
   import { tick } from "svelte";
   import { fade } from "svelte/transition";
+  import { Arguments } from "./stores.js";
   import SearchChilds from "./search_childs.svelte";
 
   export let value = "";
@@ -13,17 +14,51 @@
     obj = obj;
   }
 
-  function eventObject(key) {
+  function eventObject() {
+    //console.log("Arguments", $Arguments);
     //console.log(json, Object.keys(json).length);
-    if (Object.keys(json).length == 0) {
-      json = obj;
 
+    if (Object.keys(json).length == 0) {
+      //json = obj;
+      let Arg = $Arguments.split(/[\s|,|、|　]/);
       try {
-        concept = obj["concept"];
+        //concept = obj["concept"];
+        const keys = Object.keys(obj);
+        console.log("keys", keys, keys.includes("concept"));
+        if (keys.includes("concept")) {
+          for (let i in obj["concept"]) {
+            let tmp = obj["concept"][i];
+            let schStr = JSON.stringify(tmp);
+            for (let n in Arg) {
+              const regex = new RegExp(Arg[n], "gi");
+              const comparison = regex.test(schStr);
+              if (comparison) {
+                concept.push(tmp);
+                break; //1つでも見つかったら登録して抜ける
+              }
+            }
+          }
+          //json = concept;
+        } else {
+          //conceptを含まない場合は、検索文字があるか比較
+
+          let schStr = JSON.stringify(obj);
+          console.log("schStr", schStr);
+          let comparison = false;
+          for (let n in Arg) {
+            const regex = new RegExp(Arg[n], "gi");
+            comparison = regex.test(schStr);
+            if (comparison) {
+              json = obj;
+              break; //1つでも見つかったら登録して抜ける
+            }
+          }
+          console.log("comparison", comparison);
+        }
       } catch (e) {
         //console.error(e);
       }
-
+      json = obj;
       arrowDown = true;
     } else {
       json = {}; //「隠す」も考慮する
@@ -34,14 +69,46 @@
     //console.log(json, Object.keys(json).length);
   }
   eventObject();
+
+  function display(text) {
+    if (text) {
+      //console.log("display", display);
+      //console.log("text:", text);
+      let Arg = $Arguments.split(/[\s|,|、|　]/);
+      for (let n in Arg) {
+        const regex = new RegExp(Arg[n], "gi");
+        let result = text.match(regex);
+        if (result) {
+          text = text.replaceAll(regex, "<b>" + Arg[n] + "</b>");
+          console.log("regex:", regex);
+        }
+        /*const comparison = regex.test(text);
+        if (comparison) {
+          console.log("comparison", comparison);
+          text = text.replace(regex, "<b>" + Arg[n] + "</b>");
+        }*/
+      }
+
+      return text;
+    } else {
+      return "";
+    }
+  }
+  function SelectObject(value) {
+    console.log(value);
+  }
 </script>
 
 <hr />
 <!--div>{!value ? ["選択してください"] : value}</div-->
-<button on:click={eventObject} class="ml-{indent} text-left">
-  <span class="arrow col-{indent}" class:arrowDown>&#x25b6</span>
+<button on:click={SelectObject(value)} class="ml-{indent} text-left">
+  <span class="arrow col-{indent}" class:arrowDown>&#x25b7</span>
   {obj["count"] ? `${obj["count"]}:` : ""}
-  {value.display ? `${value.display}` : `${JSON.stringify(value)}`}
+  {#if value.display}
+    {@html display(value.display)}
+  {:else}
+    {@html display(JSON.stringify(value))}
+  {/if}
 </button>
 
 {#if json}
@@ -55,7 +122,9 @@
           </ul>
         {/if}
       {:else if key !== "count"}
-        <li class="ml-{indent + 2}">{key}:"{json[key]}"</li>
+        <li class="ml-{indent + 2}">
+          {@html display(key)}:{@html display(json[key])}
+        </li>
       {/if}
     {/each}
 

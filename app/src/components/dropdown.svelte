@@ -4,7 +4,7 @@
     CodeSystem,
     Resuoces,
     SearchObj,
-    Inputstr,
+    Arguments,
     language,
     OpenTab,
   } from "./stores.js";
@@ -14,9 +14,11 @@
   let selectof = {};
   let count = 0;
   const onChange = () => {
-    $OpenTab = 1;
     $Resuoces = {};
     $SearchObj = {};
+    $Arguments = "";
+    word = "";
+    $OpenTab = 1;
     //console.log("selectof", selectof);
     $CodeSystem = selectof.id;
     const name = selectof.name;
@@ -127,10 +129,10 @@
     {
       id: 5,
       store: "CodeSystem(API)",
-      name: "hapi.fhir.org",
+      name: "hapi.fhir.org(最近エラーになります。)",
       path: "https://hapi.fhir.org/baseR4/CodeSystem/",
       param: "50445",
-    },
+    } /*,
     {
       id: 6,
       name: "点数マスタ(CSV)",
@@ -142,7 +144,7 @@
       name: "コメントデータ",
       path: "/tmpdata/",
       param: "comment_20xx.csv",
-    },
+    },*/,
   ];
   //selectの初期値の設定
   let initval = selectof;
@@ -154,15 +156,26 @@
 
   const SearchWord = () => {
     console.log("word", word);
-    $SearchObj = $Resuoces;
+    $SearchObj = {};
     let tmpConcept = [];
-    for (let i in $Resuoces["concept"]) {
-      let tmpObj = $Resuoces["concept"][i];
+    if (word.length > 0) {
+      $Arguments = word;
+      let Arg = word.split(/[\s|,|、|　]/);
+      //console.log("Arg", Arg, Arg.length);
+      for (let i in $Resuoces["concept"]) {
+        let tmpObj = $Resuoces["concept"][i];
 
-      let schStr = JSON.stringify(tmpObj);
-      if (schStr.indexOf(word) !== -1) {
-        console.log("tmpObj", tmpObj, schStr.indexOf(word));
-        tmpConcept.push(tmpObj);
+        let schStr = JSON.stringify(tmpObj);
+        for (let n in Arg) {
+          const regex = new RegExp(Arg[n], "gi");
+          const comparison = regex.test(schStr);
+          if (comparison) {
+            tmpConcept.push(tmpObj);
+            //$OpenTab = 2;
+            schpanel = "visible";
+            break; //1つでも見つかったら登録して抜ける
+          }
+        }
       }
     }
     $SearchObj = tmpConcept;
@@ -206,7 +219,7 @@
       }}
     />
     <div
-      class="{schpanel} opacity-100 absolute w-full bg-white text-gray-800 border border-gray-300 rounded-md shadow-lg z-10 overflow-y-auto max-h-[450px]"
+      class="{schpanel} opacity-100 absolute w-full bg-white text-gray-800 border border-gray-300 rounded-md shadow-lg z-10 overflow-y-auto max-h-[500px]"
     >
       <header class="h-6">
         <ul class="mx-2 absolute right-0">
@@ -219,7 +232,7 @@
         </ul>
       </header>
       <div>
-        <Search bind:searchData />
+        <Search {word} />
       </div>
     </div>
     <!--

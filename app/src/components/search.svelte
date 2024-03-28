@@ -3,6 +3,7 @@
   import { SearchObj } from "./stores.js";
   import SearchList from "./search_list.svelte";
 
+  export const word = "";
   let title = $t("common.navigate.select-00.label");
   let concept = [];
 
@@ -32,7 +33,7 @@
         concept = {};
       }
 
-      console.log("concept", MAX, chunkSize, concept);
+      console.log("concept", MAX, word, chunkSize, concept);
     } else {
       title = "";
       concept = {};

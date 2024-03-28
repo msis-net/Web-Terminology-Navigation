@@ -12,7 +12,7 @@ export const Tabname = writable("Taxonomy")
 export const OpenTab = writable(1)
 export const Resuoces = writable()
 export const SearchObj = writable({})
-export const Inputstr = writable("")
+export const Arguments = writable([])
 
 export async function getJonResource(path) {
     const res = await fetch(path);

@@ -5,6 +5,7 @@
   export let nextChunk = undefined;
   export let addObject = undefined;
   export let chunkSize = 0;
+  export const word = "";
 
   const maxRetryCountOnPreLoad = 20;
   const triggerRangeRatio = 0.01;
@@ -20,6 +21,8 @@
   let loading = false;
   $: triggerRange = clientHeight * triggerRangeRatio;
   $: chunkSize = chunkSize;
+
+  console.log("word", word);
   /**
    * 上方向のデータをロードします。
    */
@@ -193,7 +196,7 @@
   {#key json}
     {#each json as value, i}
       <!--slot prop={value} {i} /-->
-      <SearchChilds obj={value} {value} id={value.counter} indent={1} />
+      <SearchChilds obj={value} {value} {word} id={value.counter} indent={1} />
     {/each}
   {/key}
 </div>
