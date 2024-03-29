@@ -1,9 +1,9 @@
 <script>
   import { tick } from "svelte";
   import { fade } from "svelte/transition";
-  import { Arguments } from "./stores.js";
+  import { Arguments, schpanel } from "./stores.js";
   import SearchChilds from "./search_childs.svelte";
-
+  import NavTaxonomyChilds from "./nav_taxonomy_childs.svelte";
   export let value = "";
   export let indent = 0;
   export let obj = {};
@@ -72,8 +72,6 @@
 
   function display(text) {
     if (text) {
-      //console.log("display", display);
-      //console.log("text:", text);
       let Arg = $Arguments.split(/[\s|,|、|　]/);
       for (let n in Arg) {
         const regex = new RegExp(Arg[n], "gi");
@@ -82,33 +80,37 @@
           text = text.replaceAll(regex, "<b>" + Arg[n] + "</b>");
           console.log("regex:", regex);
         }
-        /*const comparison = regex.test(text);
-        if (comparison) {
-          console.log("comparison", comparison);
-          text = text.replace(regex, "<b>" + Arg[n] + "</b>");
-        }*/
       }
-
       return text;
     } else {
       return "";
     }
   }
-  function SelectObject(value) {
-    console.log(value);
+  function SelectObject() {
+    //console.log(value);
+    $schpanel = "invisible";
+    OpenElement(obj.code);
   }
+  let OpenElement = () => {};
 </script>
+
+<div class="hidden">
+  <!--NavTaxonomyChilds#OpenElement呼出しの為表示しない-->
+  <NavTaxonomyChilds bind:OpenElement />
+</div>
 
 <hr />
 <!--div>{!value ? ["選択してください"] : value}</div-->
 <button on:click={SelectObject(value)} class="ml-{indent} text-left">
   <span class="arrow col-{indent}" class:arrowDown>&#x25b7</span>
-  {obj["count"] ? `${obj["count"]}:` : ""}
-  {#if value.display}
-    {@html display(value.display)}
-  {:else}
-    {@html display(JSON.stringify(value))}
-  {/if}
+  <div class="text-[1.1em] text-blue-500 border-b">
+    {obj["count"] ? `${obj["count"]}:` : ""}
+    {#if value.display}
+      {@html display(value.display)}
+    {:else}
+      {@html display(JSON.stringify(value))}
+    {/if}
+  </div>
 </button>
 
 {#if json}

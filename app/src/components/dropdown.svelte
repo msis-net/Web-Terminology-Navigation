@@ -8,6 +8,8 @@
     Concept,
     language,
     OpenTab,
+    schpanel,
+    Openkey,
   } from "./stores.js";
   import Search from "./search.svelte";
   import { readonly } from "svelte/store";
@@ -20,10 +22,11 @@
     $Resuoces = {};
     $SearchObj = {};
     $Concept = [];
+    $Openkey = "";
     $Arguments = "";
     word = "";
     $OpenTab = 1;
-    schpanel = "invisible";
+    $schpanel = "invisible";
   };
 
   const onChange = () => {
@@ -161,7 +164,6 @@
   let word = "";
   let searchData;
   //検索Popup
-  let schpanel = "invisible";
 
   const SearchWord = () => {
     console.log("word", word);
@@ -198,10 +200,11 @@
       SearchResult =
         $t("common.navigate.Result") + ":" + tmpConcept.length.toLocaleString();
     }
-    schpanel = "visible";
+    $schpanel = "visible";
   };
 </script>
 
+<svelte></svelte>
 <div class="max-w-sm mx-auto mb-2">
   <div class="flex">
     <select
@@ -239,14 +242,14 @@
       }}
     />
     <div
-      class="{schpanel} p-2 opacity-100 absolute w-full bg-white text-gray-800 border border-gray-300 rounded-md shadow-lg z-10 overflow-y-auto max-h-[500px]"
+      class="{$schpanel} p-2 opacity-100 absolute w-full bg-white text-gray-800 border border-gray-300 rounded-md shadow-lg z-10 overflow-y-auto max-h-[500px]"
     >
       <header class="h-7">
         <div class="mx-2 flex text-[1.0em] text-gray-500">
           <div cass="">{SearchResult}</div>
           <button
             class=" text-[1.2em] ml-auto"
-            on:click={() => (schpanel = "invisible")}>x</button
+            on:click={() => ($schpanel = "invisible")}>x</button
           >
         </div>
       </header>

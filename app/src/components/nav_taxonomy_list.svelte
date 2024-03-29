@@ -166,13 +166,6 @@
     list = [];
     await tick();
     await preLoad();
-    /*テスト:全読込
-    let counter = 1701; //1701;//1190058
-    for (let i = 0; i < counter; i++) {
-      console.log(i + "/" + counter);
-      await loadNext();
-      await tick();
-    }*/
   }
 
   init();

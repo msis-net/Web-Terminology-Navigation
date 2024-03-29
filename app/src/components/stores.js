@@ -9,12 +9,14 @@ function increment() {
 export const language = writable("en");
 export const CodeSystem = writable("none")
 export const Tabname = writable("Taxonomy")
+
 export const OpenTab = writable(1)
 export const Resuoces = writable()
 export const SearchObj = writable({})
 export const Arguments = writable([])
 export const Concept = writable({})
-
+export const schpanel = writable("invisible");
+export const Openkey = writable("")
 export async function getJonResource(path) {
     const res = await fetch(path);
     if (res.ok) {
