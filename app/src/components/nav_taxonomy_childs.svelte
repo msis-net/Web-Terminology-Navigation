@@ -2,6 +2,7 @@
   import { tick } from "svelte";
   import { fade } from "svelte/transition";
   import NavTaxonomyChilds from "@/components/nav_taxonomy_childs.svelte";
+  import { Concept } from "./stores.js";
 
   export let value = "";
   export let indent = 0;
@@ -33,14 +34,24 @@
     //await tick();
     //console.log(json, Object.keys(json).length);
   }
+  function SelectObject(value) {
+    $Concept = value;
+    console.log("$Concept", $Concept);
+  }
 </script>
 
 <hr />
 <!--div>{!value ? ["選択してください"] : value}</div-->
 <button on:click={eventObject} class="ml-{indent} text-left">
   <span class="arrow col-{indent}" class:arrowDown>&#x25b6</span>
+</button>
+<button
+  on:click={SelectObject(value)}
+  class="ml-{indent} text-left text-[1.1em]"
+>
   {obj["count"] ? `${obj["count"]}:` : ""}
   {value.display ? `${value.display}` : `${JSON.stringify(value)}`}
+  <span class="arrow text-[0.6em]">*</span>
 </button>
 
 {#if json}

@@ -1,6 +1,3 @@
-<!--
-  
--->
 <script>
   import { onMount, afterUpdate } from "svelte";
   import { fade } from "svelte/transition";

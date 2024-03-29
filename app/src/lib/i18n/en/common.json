@@ -7,7 +7,10 @@
 			"value": "none",
 			"label": "Select a CodeSystem"
 		},
-		"SearchWord":"Search Word (3 or more characters)",
+		"Result":"Result",
+		"SearchWord":"Search Word(Multiple possible)",
+		"BeResults":"results found.",
+		"NoResults":"No results.",
 		"Taxonomy":"Taxonomy",
 		"Search":"Search",
 		"Bookmarks":"Bookmarks",

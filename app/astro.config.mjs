@@ -16,7 +16,7 @@ export default defineConfig({
   },
   server: {
    port: 5678,
-   host: false //ネットワーク全ての接続を許可(本番時)
+   host: true //ネットワーク全ての接続を許可(本番時)
   },
   output: "server",
   adapter: node({

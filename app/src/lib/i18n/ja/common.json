@@ -5,9 +5,12 @@
 	"navigate": {
 		"select-00": {
 			"value": "none",
-			"label": "CodeSystemを選択"
+			"label": "CodeSystemを選択してください。"
 		},
-		"SearchWord":"検索（３文字以上）",
+		"Result":"結果",
+		"SearchWord":"検索文字（複数指定可）",
+		"BeResults":"件の結果が見つかりました。",
+		"NoResults":"見つかりませんでした。",
 		"Taxonomy":"分類",
 		"Search":"検索",
 		"Bookmarks":"ブックマーク",

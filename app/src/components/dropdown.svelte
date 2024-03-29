@@ -5,6 +5,7 @@
     Resuoces,
     SearchObj,
     Arguments,
+    Concept,
     language,
     OpenTab,
   } from "./stores.js";
@@ -13,12 +14,20 @@
 
   let selectof = {};
   let count = 0;
-  const onChange = () => {
+  let SearchResult = "";
+
+  const objInit = () => {
     $Resuoces = {};
     $SearchObj = {};
+    $Concept = [];
     $Arguments = "";
     word = "";
     $OpenTab = 1;
+    schpanel = "invisible";
+  };
+
+  const onChange = () => {
+    objInit();
     //console.log("selectof", selectof);
     $CodeSystem = selectof.id;
     const name = selectof.name;
@@ -129,9 +138,9 @@
     {
       id: 5,
       store: "CodeSystem(API)",
-      name: "hapi.fhir.org(最近エラーになります。)",
+      name: "hapi.fhir.org",
       path: "https://hapi.fhir.org/baseR4/CodeSystem/",
-      param: "50445",
+      param: "102716",
     } /*,
     {
       id: 6,
@@ -148,7 +157,7 @@
   ];
   //selectの初期値の設定
   let initval = selectof;
-
+  let Result = $t("common.navigate.Result");
   let word = "";
   let searchData;
   //検索Popup
@@ -169,16 +178,27 @@
         for (let n in Arg) {
           const regex = new RegExp(Arg[n], "gi");
           const comparison = regex.test(schStr);
+
           if (comparison) {
             tmpConcept.push(tmpObj);
             //$OpenTab = 2;
-            schpanel = "visible";
+            //schpanel = "visible";
             break; //1つでも見つかったら登録して抜ける
           }
+          const match = regex.test(schStr);
+          console.log("match", match.length, match);
         }
       }
     }
     $SearchObj = tmpConcept;
+    if ($SearchObj.length === 0) {
+      SearchResult = $t("common.navigate.NoResults");
+    } else {
+      //SearchResult = tmpConcept.length + " " + $t("common.navigate.BeResults");
+      SearchResult =
+        $t("common.navigate.Result") + ":" + tmpConcept.length.toLocaleString();
+    }
+    schpanel = "visible";
   };
 </script>
 
@@ -199,7 +219,7 @@
     </select>
 
     <div class="text-[0.8em] h-4 leading-4 m-2 p-1">
-      Count:{count}
+      Count:{count.toLocaleString()}
     </div>
     <button class="text-[0.8em] h-4 leading-4 m-2 p-1"></button>
   </div>
@@ -219,17 +239,16 @@
       }}
     />
     <div
-      class="{schpanel} opacity-100 absolute w-full bg-white text-gray-800 border border-gray-300 rounded-md shadow-lg z-10 overflow-y-auto max-h-[500px]"
+      class="{schpanel} p-2 opacity-100 absolute w-full bg-white text-gray-800 border border-gray-300 rounded-md shadow-lg z-10 overflow-y-auto max-h-[500px]"
     >
-      <header class="h-6">
-        <ul class="mx-2 absolute right-0">
-          <li>
-            <button
-              class="text-gray-500 text-[1.2em]"
-              on:click={() => (schpanel = "invisible")}>×</button
-            >
-          </li>
-        </ul>
+      <header class="h-7">
+        <div class="mx-2 flex text-[1.0em] text-gray-500">
+          <div cass="">{SearchResult}</div>
+          <button
+            class=" text-[1.2em] ml-auto"
+            on:click={() => (schpanel = "invisible")}>x</button
+          >
+        </div>
       </header>
       <div>
         <Search {word} />
