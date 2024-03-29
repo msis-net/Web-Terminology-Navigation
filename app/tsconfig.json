@@ -1,6 +1,6 @@
 {
   "root": true,
-  "extends": "",
+  "extends": "astro/tsconfigs/strict",
   "compilerOptions": {
     "jsx": "react-jsx",
     "noFallthroughCasesInSwitch": true,
