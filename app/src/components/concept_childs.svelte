@@ -2,8 +2,7 @@
   import { tick } from "svelte";
   import { fade } from "svelte/transition";
   import { Arguments, schpanel } from "./stores.js";
-  import SearchChilds from "./search_childs.svelte";
-  import NavTaxonomyChilds from "./nav_taxonomy_childs.svelte";
+  import ConceptChilds from "./concept_childs.svelte";
   export let value = "";
   export let indent = 0;
   export let obj = {};
@@ -89,17 +88,8 @@
   function SelectObject() {
     console.log(value);
     $schpanel = "invisible";
-    OpenElement(obj.code);
   }
-  let OpenElement = () => {};
 </script>
-
-<div class="hidden">
-  <!--NavTaxonomyChilds#OpenElement呼出しの為表示しない-->
-  {#if ($schpanel = "visible")}
-    <NavTaxonomyChilds bind:OpenElement />
-  {/if}
-</div>
 
 <hr />
 <div class="text-[0.6em]">SearchChilds</div>
@@ -123,7 +113,7 @@
       {#if typeof json[key] == "object"}
         {#if key !== "concept"}
           <ul class="ml-{indent + 1}">
-            <SearchChilds obj={json[key]} value={key} indent={indent + 1} />
+            <ConceptChilds obj={json[key]} value={key} indent={indent + 1} />
           </ul>
         {/if}
       {:else if key !== "count"}
@@ -135,7 +125,7 @@
 
     {#if concept}
       {#each concept as item, i}
-        <SearchChilds obj={item} value={item} indent={indent + 1} />
+        <ConceptChilds obj={item} value={item} indent={indent + 1} />
       {/each}
     {/if}
   </ul>

@@ -7,12 +7,12 @@
 </script>
 
 <div>Concept Detail</div>
-<div>
-  <ConceptView indent="1" />
-</div>
-<div>
+<div class="bg-green-100">
   <!--
   <Search {$SearchObj} />
   <NavTaxonomy {$Resuoces} />
   -->
+</div>
+<div>
+  <ConceptView indent="1" />
 </div>

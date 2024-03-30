@@ -1,5 +1,6 @@
 <script>
   import { tick } from "svelte";
+  import { Position } from "./stores.js";
   import NavTaxonomyChilds from "@/components/nav_taxonomy_childs.svelte";
   export let previousChunk = undefined;
   export let nextChunk = undefined;
@@ -20,6 +21,17 @@
   let loading = false;
   $: triggerRange = clientHeight * triggerRangeRatio;
   $: chunkSize = chunkSize;
+  $: {
+    if ($Position > 0) {
+      console.log("$Position", $Position);
+      mvScroll($Position);
+    }
+  }
+
+  function mvScroll(num) {
+    container.scrollTo(0, num);
+    console.log("scrollTop", container.scrollTop);
+  }
   /**
    * 上方向のデータをロードします。
    */

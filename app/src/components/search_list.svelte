@@ -22,7 +22,6 @@
   $: triggerRange = clientHeight * triggerRangeRatio;
   $: chunkSize = chunkSize;
 
-  console.log("word", word);
   /**
    * 上方向のデータをロードします。
    */
@@ -124,7 +123,7 @@
       //await tick();
     } finally {
       loading = false;
-      console.log("loadCount", loadCount);
+      //console.log("loadCount", loadCount);
     }
   }
 
@@ -189,7 +188,7 @@
   {#key json}
     {#each json as value, i}
       <!--slot prop={value} {i} /-->
-      <SearchChilds obj={value} {value} {word} id={value.counter} indent={1} />
+      <SearchChilds obj={value} {value} indent={1} />
     {/each}
   {/key}
 </div>
