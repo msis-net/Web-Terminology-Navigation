@@ -1,5 +1,5 @@
 <script>
-  import { tick, onMount } from "svelte";
+  import { tick, onMount, afterUpdate } from "svelte";
   import { fade } from "svelte/transition";
 
   import { Concept, Openkey, OpenTab, Label, Position } from "./stores.js";
@@ -9,19 +9,22 @@
   export let indent = 0;
   export let obj = {};
   export let opencode = [];
+  export let mvScroll = undefined;
   let element;
   let elementCoordinates;
   let json = {};
   let concept = [];
   let arrowDown = false;
+  let id = "";
   $: obj = obj;
   $: {
     if ($Openkey) {
-      console.log("Openkey>>", $Openkey, obj.code);
+      //console.log("Openkey>>", $Openkey, obj.code);
       try {
         const schStr = JSON.stringify(obj);
         if ($Openkey.length > 0 && schStr.indexOf($Openkey) !== -1) {
           //eventObject();
+          id = $Openkey;
           viewTarget($Openkey);
         }
       } catch (e) {
@@ -30,13 +33,14 @@
     }
   }
   function viewTarget(code) {
-    console.log("viewTarget", code, obj);
+    //console.log("viewTarget", code, obj);
     console.log(json, Object.keys(json).length);
 
     if (Object.keys(json).length == 0) {
       //閉じている場合のみ実行
       let scfStr = JSON.stringify(obj);
       //if (scfStr.indexOf(code) != -1) {
+      console.log("viewTarget", code, obj);
       json = obj;
 
       try {
@@ -47,7 +51,6 @@
       }
 
       arrowDown = true;
-      //}
     }
     //console.log(json, Object.keys(json).length);
   }
@@ -96,8 +99,10 @@
     $Label = value;
   }
   export const OpenElement = (code) => {
-    $Openkey = code;
+    //$Openkeyを初期化する事でafterUpdate()が発火する
+    $Openkey = "";
     $OpenTab = 1;
+    $Openkey = code;
     console.log("NTC:OpenElement", code);
   };
 
@@ -112,25 +117,38 @@
         obj.code,
         elementCoordinates
       );
-      mvScroll(elementCoordinates.top - 142);
+      //mvScroll(elementCoordinates.top - 142);
     }
   });
-  function mvScroll(num) {
-    $Position = num;
-    console.log("Position", $Position);
-  }
+
+  afterUpdate(() => {
+    if ($Openkey === obj.code) {
+      window.setTimeout(() => {
+        const { top, right, bottom, left } = element.getBoundingClientRect();
+        elementCoordinates = { top, right, bottom, left };
+        element.classList.add("bg-yellow-200");
+        console.log("afterUpdate", elementCoordinates, top);
+        mvScroll(top);
+      }, 100);
+      //mvScroll($Position + elementCoordinates.top - 110);
+
+      //console.log("element", element, $Position, elementCoordinates.top);
+    }
+  });
 </script>
 
 <hr />
 
 <!--div>{!value ? ["選択してください"] : value}</div-->
-<button on:click={eventObject} class="ml-{indent} text-left">
+
+<button on:click={eventObject} class="ml-{indent} text-left ml-1 mr-1">
   <span class="arrow col-{indent}" class:arrowDown>&#x25b6</span>
 </button>
 <button
   on:click={SelectObject(value)}
-  class="element ml-{indent} text-left text-[1.1em]"
+  class="element pl-1 rounded-sm bgy text-left text-[1.1em]"
   bind:this={element}
+  {id}
 >
   <!--検索するとcountが入れ替わる
   {obj["count"] ? `${obj["count"]}:` : ""}
@@ -151,6 +169,7 @@
               value={key}
               indent={indent + 1}
               {opencode}
+              {mvScroll}
             />
           </ul>
         {/if}
@@ -166,6 +185,7 @@
           value={item}
           {opencode}
           indent={indent + 1}
+          {mvScroll}
         />
       {/each}
     {/if}

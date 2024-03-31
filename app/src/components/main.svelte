@@ -8,8 +8,9 @@
 
 <div>Concept Detail</div>
 <div class="bg-green-100">
-  <!--
   <Search {$SearchObj} />
+  <!--
+  
   <NavTaxonomy {$Resuoces} />
   -->
 </div>
