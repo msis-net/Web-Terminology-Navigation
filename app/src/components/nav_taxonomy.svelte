@@ -14,6 +14,7 @@
 
   $: inputValue = initialValue;
   $: {
+    console.log("$Resuoce", $Resuoces);
     if (initialValue < MIN) initialValue = MIN;
     if (MAX < initialValue) initialValue = MAX;
     if ($Resuoces) {

@@ -32,6 +32,8 @@
       }
     }
   }
+
+  //検索
   function viewTarget(code) {
     //console.log("viewTarget", code, obj);
     console.log(json, Object.keys(json).length);
@@ -140,23 +142,23 @@
 <hr />
 
 <!--div>{!value ? ["選択してください"] : value}</div-->
-
-<button on:click={eventObject} class="ml-{indent} text-left ml-1 mr-1">
-  <span class="arrow col-{indent}" class:arrowDown>&#x25b6</span>
-</button>
-<button
-  on:click={SelectObject(value)}
-  class="element pl-1 rounded-sm bgy text-left text-[1.1em]"
-  bind:this={element}
-  {id}
->
-  <!--検索するとcountが入れ替わる
+<div class="whitespace-nowrap">
+  <button on:click={eventObject} class="ml-{indent} text-left ml-1 mr-1">
+    <span class="arrow col-{indent}" class:arrowDown>&#x25b6</span>
+  </button>
+  <button
+    on:click={SelectObject(value)}
+    class="element pl-1 rounded-sm bgy text-left text-[1.1em]"
+    bind:this={element}
+    {id}
+  >
+    <!--検索するとcountが入れ替わる
   {obj["count"] ? `${obj["count"]}:` : ""}
   -->
-  {value.display ? `${value.display}` : `${JSON.stringify(value)}`}
-  <span class="arrow text-[0.6em]"></span>
-</button>
-
+    {value.display ? `${value.display}` : `${JSON.stringify(value)}`}
+    <span class="arrow text-[0.6em]"></span>
+  </button>
+</div>
 {#if json}
   <ul class="ml-4">
     {#each Object.keys(json) as key, i}
