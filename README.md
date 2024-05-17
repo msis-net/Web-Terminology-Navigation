@@ -1,6 +1,7 @@
-
 ### 「Web用語ナビゲータアプリケーションの設計・開発」
-<span style="color: red">このブランチ(main-js)は機能開発モデルとしてJavascriptのみでコーデッィングされたものです。</span>
+このブランチ(main-js)は機能開発モデルとしてJavascriptのみでコーディングされたもので、TypeScriptとの比較学習用に保管しています。<br>
+本番開発はMainブランチのTypeScript版を使う様にしてください。
+
 #### 第１フェーズ(機能面開発モデル）
 
 
