@@ -1,0 +1,51 @@
+---
+const { label } = Astro.props;
+---
+
+<div class="visible hidden">{label}</div>
+<div class="text-xl bg-yellow-200 select-none p-5">App Title</div>
+<ul class="text-white bg-slate-600 p-3">
+  <li>
+    <a href="#"><i class="fas fa-qrcode"></i>NavMenu</a>
+  </li>
+  <li>
+    <a href="#"><i class="fas fa-link"></i>コミュニティ</a>
+  </li>
+  <li>
+    <a href="#"><i class="fas fa-coffee"></i>コーヒ一</a>
+  </li>
+  <li>
+    <a href="#"><i class="fas fa-calendar-week"></i>イベント</a>
+  </li>
+  <li>
+    <a href="#"><i class="fas fa-sliders-h"></i>サービス</a>
+  </li>
+  <li>
+    <a href="#"><i class="far fa-question-circle"></i>詳細情報</a>
+  </li>
+  <li>
+    <a href="#"><i class="fas fa-envelope"></i>お問い合わせ</a>
+  </li>
+</ul>
+
+<style>
+  ul li {
+    display: block;
+    height: 100%;
+    line-height: 60px;
+    border-top: px solid #999;
+  }
+  ul a {
+    display: block;
+    width: 100%;
+    list-style: 56px;
+    transition: 0.3s;
+  }
+
+  ul li:hover a {
+    padding-left: 10px;
+  }
+  ul li i {
+    margin-right: 5px;
+  }
+</style>

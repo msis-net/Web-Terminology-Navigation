@@ -1,0 +1,157 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import Navbar from "@/components/_navbar.svelte";
+import Sidenav from "@/components/_sidenav.svelte";
+import Pagenav from "@/components/_pagenav.svelte";
+
+import Content from "@/components/_content.svelte";
+const appname = "Webapp";
+---
+
+<Layout title={appname}>
+  <!-- toggle section -->
+  <input type="checkbox" id="sidenav" class="hidden" />
+  <label for="sidenav">
+    <span
+      id="sidenav_btn"
+      class="material-symbols-outlined left-[250px] p-2 top-2"
+    >
+      menu
+    </span>
+  </label>
+  <!-- toggle section -->
+  <input type="checkbox" id="pagenav" class="hidden" />
+  <label for="pagenav">
+    <span
+      id="pagenav_btn"
+      class="material-symbols-outlined absolute text-2xl right-0 p-2 top-2 text-gray-500"
+    >
+      right_panel_open
+    </span>
+  </label>
+  <!-- sidebar section -->
+  <aside class="sidenav fixed left-0 h-lvh w-60 overflow-y-auto">
+    <Sidenav title="sidenav" client:only="svelte" />
+  </aside>
+  <!-- content section -->
+  <section class="h-lvh">
+    <!-- if insert "overflow-y-auto" that pouplist is back of containt　-->
+    <nav class="nav-height flex">
+      <Navbar label="Navbar" client:only="svelte" />
+    </nav>
+    <div class="content flex content-wrapp">
+      <main class="flex-1 p-2 overflow-y-auto">
+        <Content label="Content" client:only="svelte" />
+      </main>
+      <aside class="pagenav overflow-y-auto">
+        <Pagenav label="Pagenav" client:only="svelte" />
+      </aside>
+      <!--
+        <aside class="w-32 bg-blue-100 p-2 overflow-y-auto"></aside>
+      </aside> 
+    -->
+    </div>
+  </section>
+</Layout>
+
+<style>
+  /*background-color*/
+  aside.sidenav {
+    background-color: #a7d8de;
+  }
+  section nav {
+    background-color: #ffcd6a;
+  }
+  section main {
+    background-color: #80a0d4;
+  }
+  aside.pagenav {
+    background-color: #9f8dbf;
+    transition-property: all;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    transition-duration: 0.2s;
+  }
+
+  /**/
+  .sidenav {
+    transition: all 0.2s;
+    z-index: 1;
+  }
+
+  #sidenav_btn,
+  #pagenav_btn {
+    cursor: pointer;
+    z-index: 2;
+  }
+  
+  #sidenav_btn{
+    position: absolute;
+    font-size: 1.5rem/* 24px */;
+    line-height: 2rem/* 32px */;
+    padding: 0.5rem;
+    top: 0.5rem;
+    color:#666;
+  }
+
+  #sidenav:checked ~ .sidenav {
+    left: -240px;
+  }
+
+  #sidenav:checked ~ label #sidenav_btn {
+    left: 0px;
+  }
+
+  #sidenav:checked ~ section {
+    margin-left: 0px;
+  }
+  .content {
+    position: relative;
+  }
+
+  section {
+    margin-left: 240px;
+    transition: all 0.2s;
+  }
+
+
+  .pagenav {
+    width: 0;
+  }
+  #pagenav:checked ~ section div .pagenav {
+    width: 200px;
+  }
+  @keyframes RightInn {
+    0% {
+      transform: translateX(200px);
+    }
+    100% {
+      transform: translateX(0);
+    }
+  }
+
+  @media (max-width: 768px) {
+    .sidenav {
+      left: -250px;
+    }
+    #sidenav_btn {
+      left: 0px;
+    }
+    section {
+      margin-left: 0px;
+    }
+    #sidenav:checked ~ .sidenav {
+      left: 0px;
+    }
+
+    #sidenav:checked ~ label #sidenav_btn {
+      left: 180px;
+    }
+    pagenav:checked ~ section div .pagenav {
+      position: absolute;
+      opacity: 0.9;
+      right: 0%;
+      height: 100%;
+    }
+  }
+
+</style>

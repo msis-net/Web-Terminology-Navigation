@@ -1,0 +1,71 @@
+---
+import Layout from "@/layouts/Layout.astro";
+const appname = "Webapp";
+---
+
+<Layout title={appname}>
+  <p>
+    <a
+      href="https://retval.jp/blog/css-property-position/"
+      target="_blank"
+      rel="noopener noreferrer">CSS:positio[参考]</a
+    >
+  </p>
+  <div class="bg-green-300 relative top-36 h-12 w-36">
+    <div class="">{appname}</div>
+    <div>relative#1</div>
+  </div>
+
+  <div class="bg-yellow-300 relative -top-12 h-12 w-36">
+    <div class="bg-slate-400 w-4/5">{appname}</div>
+    <div>relative#2</div>
+  </div>
+
+  <div class="bg-red-300 relative h-12 w-36">
+    <div class="bg-slate-400 w-4/5">{appname}</div>
+    <div>relative#3</div>
+  </div>
+
+  <div class="bg-blue-300 fixed left-48 h-12 w-36 z-10">
+    <div class="bg-slate-400 w-4/5">{appname}</div>
+    <div>fixed:left-48</div>
+  </div>
+
+  <div class="bg-purple-300 0 sticky top-20 left-96 h-12 w-36">
+    <div class="bg-slate-400 w-4/5">{appname}</div>
+    <div>sticky:top-20</div>
+  </div>
+
+  <ol class="list-decimal relative left-[360px]">
+    <li>scroll</li>
+    <li>scroll</li>
+    <li>scroll</li>
+    <li>scroll</li>
+    <li>scroll</li>
+    <li>scroll</li>
+    <li>scroll</li>
+    <li>scroll</li>
+    <li>scroll</li>
+    <li>scroll</li>
+    <li>scroll</li>
+    <li>scroll</li>
+    <li>scroll</li>
+    <li>scroll</li>
+    <li>scroll</li>
+    <li>scroll</li>
+    <li>scroll</li>
+    <li>scroll</li>
+    <li>scroll</li>
+    <li>scroll</li>
+    <li>scroll</li>
+    <li>scroll</li>
+    <li>scroll</li>
+    <li>scroll</li>
+    <li>scroll</li>
+    <li>scroll</li>
+    <li>scroll</li>
+    <li>scroll</li>
+    <li>scroll</li>
+    <li>scroll</li>
+  </ol>
+</Layout>

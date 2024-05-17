@@ -1,29 +1,22 @@
 <script>
-  import { t } from "@/lib/i18n/i18n";
+  import { loadTranslations, t } from "@/lib/i18n/i18n";
   import { onMount } from "svelte";
   import { ImportsNotUsedAsValues } from "typescript";
   import {
     language,
-    CodeSystem,
     Tabname,
-    getJonResource,
     OpenTab,
     SearchObj,
     Resuoces,
-  } from "./stores.js";
-
+  } from "@/lib/stores";
+  loadTranslations($language, "/");
   import NavTaxonomy from "./nav_taxonomy.svelte";
   import Search from "./search.svelte";
-
-  let search = "";
 
   function toggleTabs(tabNumber, tabName) {
     $OpenTab = tabNumber;
     $Tabname = tabName;
   }
-  console.log("OpenTab", $OpenTab);
-  console.log("Tabname", $Tabname);
-  //$t("common.navigate.Taxonom//$t("common.navigate.Taxonomy"
 </script>
 
 <!--親ノードでflex適用されている-->
@@ -50,7 +43,7 @@
     </button>
     <button
       type="button"
-      on:click={() => toggleTabs(3, "Favorites")}
+      on:click={() => toggleTabs(3, "Bookmarks")}
       class="px-2 {$OpenTab === 3
         ? 'transition-all font-bold text-blue-600 border-y-2 border-blue-600'
         : 'bg-none text-gray-500'}"
@@ -69,27 +62,30 @@
   </nav>
 </div>
 
-<div class="tab-height-nav">
+<div class="tabbody tab-height-nav">
   <div
     id="tab1"
     class="h-full bg-gray-100 {$OpenTab === 1 ? 'visible' : 'hidden'}"
   >
-    <NavTaxonomy {$Resuoces} />
+    <div class="tabbody">
+      <NavTaxonomy {$Resuoces} />
+    </div>
   </div>
 
   <div
     id="tab2"
     class="h-full bg-green-100 {$OpenTab === 2 ? 'visible' : 'hidden'}"
   >
-    <Search {$SearchObj} />
+    <div class="tabbody">
+      <Search {$SearchObj} />
+    </div>
   </div>
 
   <div
     id="tab3"
     class="h-full bg-yellow-100 {$OpenTab === 3 ? 'visible' : 'hidden'}"
   >
-    <div>
-      <div>CodeSystem {$CodeSystem}</div>
+    <div class="tabbody">
       <div>Tabname {$Tabname}</div>
     </div>
   </div>
@@ -98,9 +94,17 @@
     id="tab4"
     class="h-full bg-red-100 {$OpenTab === 4 ? 'visible' : 'hidden'}"
   >
-    <div>
-      <div>CodeSystem {$CodeSystem}</div>
+    <div class="tabbody">
       <div>Tabname {$Tabname}</div>
     </div>
   </div>
 </div>
+
+<style>
+  .tabbody {
+    height: calc(100%);
+  }
+  .tab-height-nav {
+    height: calc(100% - 110px);
+  }
+</style>

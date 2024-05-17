@@ -1,31 +1,95 @@
 @charset "UTF-8";
 :root {
-  --header-height: 68px;
+  --nav-height: 68px;
 }
 
 * {
   box-sizing: border-box;
 }
 
-html {
-  height: 100hv;
-}
-
 body {
-  font-family: "Hiragino Kaku Gothic Pro", "ヒラギノ角ゴ Pro W3", メイリオ, Meiryo, "Helvetica Neue", Helvetica, Arial, sans-serif;
-  height: 100vh;
+  font-family: "Noto Sans JP", sans-serif;
 }
 
-header {
-  height: var(--header-height);
+.nav-height {
+  height: var(--nav-height);
 }
 
+/*横幅全体のNavバーを設置した場合はその分の高さ調整が必要になる*/
 .content-wrapp {
-  height: calc( 100% - var(--header-height) );
-  background-color: #13997d;
+  height: calc(100% - var(--nav-height));
 }
 
-/*Navigateのタブ表示部分の高さ*/
-.tab-height-nav {
-  height: calc( 100% - 102px);
+/*Googleiconの縦位置の調整（デフォルトでは少しずれる）*/
+.material-symbols-outlined {
+  display: inline-flex;
+  vertical-align: middle;
+}
+
+.card {
+  border: solid 1px #666;
+  border-radius: 0.2rem;
+}
+.btn {
+  cursor: pointer;
+}
+.card div {
+  transition: all 0.5s;
+}
+
+.card .card-header {
+  display: flex;
+  padding: 4px;
+  width: 100%;
+  border-bottom: solid 1px #666;
+}
+
+.card .card-header .card-title {
+  flex: 1 1 0%;
+  user-select: none;
+}
+
+.card .card-body {
+  padding: 4px;
+  font-size: 0.8rem;
+}
+input[type="checkbox"].on-off {
+  display: none;
+}
+
+/*UP DOWN*/
+input[type="checkbox"].on-off ~ .card-body {
+  height: 120px;
+}
+
+input[type="checkbox"].on-off:checked ~ .card-body {
+  height: 0px;
+  overflow: hidden;
+}
+
+input[type="checkbox"].on-off:checked ~ .card-header {
+  border-bottom: none;
+}
+
+input[type="checkbox"].on-off ~ .card-header label span.remove {
+  display: block;
+}
+input[type="checkbox"].on-off ~ .card-header label span.add {
+  display: none;
+}
+
+input[type="checkbox"].on-off:checked ~ .card-header label span.remove {
+  display: none;
+}
+input[type="checkbox"].on-off:checked ~ .card-header label span.add {
+  display: block;
+}
+
+/*CLOSE*/
+input[type="checkbox"].close {
+  display: none;
+}
+
+input[type="checkbox"].close:checked + div {
+  display: none;
 }

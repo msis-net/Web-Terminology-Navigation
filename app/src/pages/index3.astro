@@ -1,0 +1,108 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import Sidenav from "@/components/_sidenav.svelte";
+
+import Main from "@/pages/_main.astro";
+
+const appname = "Webapp";
+---
+
+<Layout title={appname}>
+  <div class="flex h-lvh">
+    <aside id="LeftFrame" class="sidenav order-first overflow-y-auto">
+      <Sidenav title="sidenav" client:only="svelte" />
+    </aside>
+
+    <div id="Splitter" class="w-1 bg-slate-300 cursor-col-resize"></div>
+
+    <main class="flex-1 bg-yellow-50 p-2">
+      <Main label="Main(astro)" />
+    </main>
+    
+  </div>
+  
+</Layout>
+<script>
+  //Spliter
+  let StartDrag = false;
+
+  window.onload = onLoad;
+
+  function onLoad() {
+    const splitter = document.querySelector("#Splitter");
+    const leftFrame = document.querySelector("#LeftFrame");
+
+    if (splitter) {
+      splitter.addEventListener("mousedown", () => {
+        StartDrag = true;
+      });
+    }
+
+    document.addEventListener("mouseup", (e) => {
+      if (StartDrag == true) {
+        StartDrag = false;
+        const size = `${e.x}px`;
+        if (leftFrame instanceof HTMLElement) {
+          leftFrame.style.flexBasis = size;
+        }
+      }
+    });
+    document.addEventListener("mousemove", (e) => {
+      if (StartDrag == true) {
+        const size = `${e.x}px`;
+        if (leftFrame instanceof HTMLElement) {
+          leftFrame.style.flexBasis = size;
+        }
+      }
+    });
+  }
+</script>
+<style>
+  .sidebar {
+    transition: all 0.5s;
+  }
+
+  aside.sidenav {
+    background-color: #a7d8de;
+    width: 15rem;
+    transition-property: all;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    transition-duration: 0.2s;
+  }
+  main {
+    background-color: #80a0d4;
+  }
+  @media (max-width: 768px) {
+    .sidebar {
+      left: -250px;
+    }
+    #menu {
+      left: 0px;
+    }
+    section {
+      margin-left: 0px;
+    }
+    #check:checked ~ .sidebar {
+      left: 0px;
+    }
+
+    #check:checked ~ label #btn {
+      left: 250px;
+    }
+
+    #check:checked ~ section {
+      margin-left: 250px;
+    }
+  }
+  @media (min-width: 768px) {
+    .sidebar {
+      left: 0px;
+    }
+    #btn {
+      left: 250px;
+    }
+    section {
+      margin-left: 250px;
+    }
+  }
+</style>

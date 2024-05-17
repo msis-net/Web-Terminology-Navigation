@@ -1,21 +1,26 @@
-<script>
+<script lang="ts">
   import { tick } from "svelte";
-  import { fade } from "svelte/transition";
-  import { Concept, Label, Openkey } from "./stores.js";
-  import ConceptChilds from "./concept_childs.svelte";
+  import { Concept, Label } from "@/lib/stores";
+  import ConceptChilds from "@/components/concept_childs.svelte";
   export let value = "";
-  export let indent = 1;
-  export let obj = {};
-  let json = {};
-  let concept = [];
+  export let indent = 0;
+
+  interface ObjType {
+    concept?: any[]; // Adjust the type according to what `concept` actually contains
+    [key: string]: any; // This allows other dynamic keys if necessary
+  }
+
+  export let obj: ObjType = {};
+  let json: ObjType = {};
+
+  let concept: any[] = [];
   let arrowDown = false;
+
   $: {
     if ($Concept) {
-      console.log("Change", $Concept.display);
       obj = $Concept;
       json = {};
       concept = [];
-
       eventObject();
     }
   }
@@ -29,21 +34,22 @@
     console.log("keys", keys, keys.includes("concept"));
     if (keys.includes("concept")) {
       concept = [];
-      for (let i in obj["concept"]) {
-        let tmp = obj["concept"][i];
+      const conceptAry = obj["concept"] as any[];
+      for (let i in conceptAry) {
+        let tmp = conceptAry[i];
         concept.push(tmp);
       }
-      //json = concept;
     }
+    //json = concept;
+
     json = obj;
     arrowDown = true;
   }
 
-  async function SelectObject(value) {
+  async function SelectObject(value: any) {
     console.log("It's next Action! ", value, $Label);
   }
-  let OpenElement = () => {};
-  function display(text) {
+  function display(text: string) {
     if (text) {
       //console.log("text:", text, typeof text, $Label);
       let Arg = obj.display;
@@ -70,7 +76,7 @@
 <div class="text-[0.6em]">ConceptView</div>
 {#if Object.keys(json).length > 0}
   <!--div>{!value ? ["選択してください"] : value}</div-->
-  <button on:click={SelectObject(value)} class="ml-{indent} text-left">
+  <button on:click={() => SelectObject(value)} class="ml-{indent} text-left">
     <span class="arrow col-{indent}" class:arrowDown>&#x25b7</span>
     <!--
       {obj["count"] ? `${obj["count"]}:` : ""}
@@ -83,8 +89,7 @@
   </button>
 
   <ul class="ml-4 text-[0.8em]">
-    {#each Object.keys(json) as key, i}
-      {@const item = json[key]}
+    {#each Object.keys(json) as key}
       {#if typeof json[key] == "object"}
         {#if key !== "concept"}
           <ul class="ml-{indent + 1} ">
@@ -99,7 +104,7 @@
     {/each}
 
     {#if concept}
-      {#each concept as item, i}
+      {#each concept as item}
         <ConceptChilds obj={item} value={item} indent={indent + 1} />
       {/each}
     {/if}

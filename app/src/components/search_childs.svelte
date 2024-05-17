@@ -1,34 +1,35 @@
-<script>
-  import { tick } from "svelte";
-  import { fade } from "svelte/transition";
-  import { Arguments, schpanel } from "./stores.js";
+<script lang="ts">
+  import { SearchStr, schpanel } from "@/lib/stores";
   import SearchChilds from "./search_childs.svelte";
   import NavTaxonomyChilds from "./nav_taxonomy_childs.svelte";
-  export let value = "";
   export let indent = 0;
-  export let obj = {};
-  let json = {};
-  let concept = [];
-  let arrowDown = false;
-  $: {
-    obj = obj;
+
+  interface ValueType {
+    display?: string;
   }
+  export let value: string | ValueType = "";
+
+  interface ObjType {
+    concept?: any[]; // Adjust the type according to what `concept` actually contains
+    [key: string]: any; // This allows other dynamic keys if necessary
+  }
+  export let obj: ObjType = {};
+  let json: ObjType = {};
+
+  let concept: any[] = [];
+  let arrowDown = false;
+  $: obj;
 
   function eventObject() {
-    //console.log("Arguments", $Arguments);
-    //console.log(json, Object.keys(json).length);
-
     if (Object.keys(json).length == 0) {
-      //json = obj;
-      let Arg = $Arguments.split(/[\s|,|、|　]/);
+      let Arg = $SearchStr.split(/[\s|,|、|　]/);
       try {
-        //concept = obj["concept"];
         const keys = Object.keys(obj);
-        //console.log("keys", keys, keys.includes("concept"));
         if (keys.includes("concept")) {
-          for (let i in obj["concept"]) {
-            let tmp = obj["concept"][i];
-            let schStr = JSON.stringify(tmp);
+          const conceptAry = obj["concept"] as any[];
+          for (let i in conceptAry) {
+            let tmp = conceptAry[i];
+            let schStr = JSON.stringify(conceptAry[i]);
             for (let n in Arg) {
               const regex = new RegExp(Arg[n], "gi");
               const comparison = regex.test(schStr);
@@ -38,12 +39,9 @@
               }
             }
           }
-          //json = concept;
         } else {
           //conceptを含まない場合は、検索文字があるか比較
-
           let schStr = JSON.stringify(obj);
-          //console.log("schStr", schStr);
           let comparison = false;
           for (let n in Arg) {
             const regex = new RegExp(Arg[n], "gi");
@@ -53,10 +51,9 @@
               break; //1つでも見つかったら登録して抜ける
             }
           }
-          //console.log("comparison", comparison);
         }
       } catch (e) {
-        //console.error(e);
+        console.error(e);
       }
       json = obj;
       arrowDown = true;
@@ -70,9 +67,9 @@
   }
   eventObject();
 
-  function display(text) {
+  function display(text: string) {
     if (text) {
-      let Arg = $Arguments.split(/[\s|,|、|　]/);
+      let Arg = $SearchStr.split(/[\s|,|、|　]/);
       for (let n in Arg) {
         const regex = new RegExp(Arg[n], "gi");
         let result = text.match(regex);
@@ -86,29 +83,30 @@
       return "";
     }
   }
+
   function SelectObject() {
-    console.log(value);
     $schpanel = "invisible";
     OpenElement(obj.code);
   }
-  let OpenElement = () => {};
+  let OpenElement = (code: any) => {};
+
+  let mvScroll = () => {};
 </script>
 
 <div class="hidden">
   <!--NavTaxonomyChilds#OpenElement呼出しの為表示しない-->
   {#if ($schpanel = "visible")}
-    <NavTaxonomyChilds bind:OpenElement />
+    <NavTaxonomyChilds bind:OpenElement bind:mvScroll />
   {/if}
 </div>
 
-<hr />
-<div class="text-[0.6em]">SearchChilds</div>
 <!--div>{!value ? ["選択してください"] : value}</div-->
-<button on:click={SelectObject(value)} class="ml-{indent} text-left">
+
+<button on:click={SelectObject} class="ml-{indent} text-left">
   <div class="text-[1.1em] border-b">
     <span class="arrow col-{indent}" class:arrowDown>&#x25b7</span>
     {obj["count"] ? `${obj["count"]}:` : ""}
-    {#if value.display}
+    {#if typeof value === "object" && value.display}
       {@html display(value.display)}
     {:else}
       {@html display(JSON.stringify(value))}
@@ -118,8 +116,7 @@
 
 {#if json}
   <ul class="ml-4">
-    {#each Object.keys(json) as key, i}
-      {@const item = json[key]}
+    {#each Object.keys(json) as key}
       {#if typeof json[key] == "object"}
         {#if key !== "concept"}
           <ul class="ml-{indent + 1}">
@@ -134,7 +131,7 @@
     {/each}
 
     {#if concept}
-      {#each concept as item, i}
+      {#each concept as item}
         <SearchChilds obj={item} value={item} indent={indent + 1} />
       {/each}
     {/if}

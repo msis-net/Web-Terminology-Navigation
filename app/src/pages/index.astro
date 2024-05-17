@@ -1,71 +1,181 @@
 ---
-import Layout from '@/layouts/Layout.astro';
-import Header from '@/components/header.svelte';
-
-import Dropdoan from '@/components/dropdown.svelte'
+import Layout from "@/layouts/Layout.astro";
+import Navbar from "@/components/_navbar.svelte";
+import Dropdown from '@/components/dropdown.svelte'
 
 import Tabs from '@/components/tabs.svelte'
+import Pagenav from "@/components/_pagenav.svelte";
 
-import Main from '@/components/main.svelte'
-import Aside from '@/pages/_aside.astro'
-
-
-const appname = 'Web Terminorogy Navigater';
+import Content from "@/components/_content.svelte";
+const appname = "Webapp";
 ---
 
 <Layout title={appname}>
-	 <header class="flex items-center bg-purple-300 p-2">
-		<Header title="test" client:only="svelte"/>
-	 </header>
-	  <div class="content-wrapp flex bg-white">
-		
-		<nav id="LeftFrame" class="order-first w-96 p-2 overflow-y-auto m-0">
-			<Dropdoan client:only="svelte" />
+  <!-- toggle section 
+  <input type="checkbox" id="sidenav" class="hidden" />
+  <label for="sidenav">
+    <span id="sidenav_btn" class="material-symbols-outlined">
+      menu
+    </span>
+  </label>-->
+  <!-- toggle section -->
+  <input type="checkbox" id="pagenav" class="hidden" />
+  <label for="pagenav">
+    <span
+      id="pagenav_btn"
+      class="material-symbols-outlined absolute text-2xl right-0 p-2 top-2 text-gray-200"
+    >
+      right_panel_open
+    </span>
+  </label>
+  
+<!--Main -->
+  <nav class="flex nav-height">
+    <Navbar label="Navbar" client:only="svelte" />
+  </nav>
+  <div class="content-wrapp flex">
+    <aside id="LeftFrame" class="sidenav order-first">
+      <Dropdown client:only="svelte" />
 			<Tabs client:only="svelte" />
-		</nav>
-		<div id="Splitter1" class="w-1 bg-slate-300 cursor-col-resize"></div>
-		<main class="flex-1 bg-yellow-50 p-2 overflow-y-auto">
-			<Main client:only="svelte" />
-			
-		</main>
-		<aside class="w-32 bg-blue-100 p-2 overflow-y-auto hidden">
-			<Aside label='Aside'>
-		</aside>
-	  </div>
+    </aside>
+
+    <div id="Splitter" class="w-1 bg-slate-300 cursor-col-resize"></div>
+
+    <main class="flex-1">
+      <Content label="Content" client:only="svelte" />
+    </main>
+    <aside class="pagenav overflow-y-auto">
+      <Pagenav label="Pagenav" client:only="svelte" />
+    </aside>
+  </div>
+
 </Layout>
+<script lang="ts">
+    //Spliter
+    let StartDrag = false;
 
-<script>
-let StartDrag = false;
+    window.onload = onLoad;
 
-window.onload = onLoad;
+    function onLoad() {
+      const splitter = document.querySelector("#Splitter");
+      const leftFrame = document.querySelector("#LeftFrame");
 
-function onLoad() {
-  const splitter = document.querySelector("#Splitter1");
-  const leftFrame = document.querySelector("#LeftFrame");
+      if (splitter) {
+        splitter.addEventListener("mousedown", () => {
+          StartDrag = true;
+        });
+      }
 
-  if (splitter) {
-	splitter.addEventListener('mousedown', () => {
-  	  StartDrag = true;
-  	});
+      document.addEventListener("mouseup", (e) => {
+        if (StartDrag == true) {
+          StartDrag = false;
+          const size = `${e.x}px`;
+          if (leftFrame instanceof HTMLElement) {
+            leftFrame.style.flexBasis = size;
+          }
+        }
+      });
+      document.addEventListener("mousemove", (e) => {
+        if (StartDrag == true) {
+          const size = `${e.x}px`;
+          if (leftFrame instanceof HTMLElement) {
+            leftFrame.style.flexBasis = size;
+          }
+        }
+      });
+    }
+</script>
+<style>
+    * {
+    user-select: none;
+  }
+    /*background-color*/
+  aside.sidenav {
+    padding: 8px;
+    background-color: #ddd;
+    width: 24rem;
+    transition-property: all;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    transition-duration: 0.2s;
+  }
+  nav {
+    background-color: #3A96C2;
+  }
+  main {
+    background-color: #fff;
+  }
+  aside.pagenav {
+    background-color: #9f8dbf;
+    transition-property: all;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    transition-duration: 0.2s;
   }
 
-  document.addEventListener('mouseup', e => {
-	if (StartDrag == true) {
-	  StartDrag = false;
-	  const size = `${e.x}px`;
-	  if (leftFrame instanceof HTMLElement) {
-	  		leftFrame.style.flexBasis = size;
-	  }
-	}
-  })
-  document.addEventListener('mousemove', e => {
-	if (StartDrag == true) {
-	  const size = `${e.x}px`;
-	  if (leftFrame instanceof HTMLElement) {
-	    leftFrame.style.flexBasis = size;
-	  }
-	}
-  })
-}
-</script>
+
+/**/
+  #sidenav_btn,
+  #pagenav_btn {
+    cursor: pointer;
+    z-index: 2;
+  }
+  
+  #sidenav_btn{
+    position: absolute;
+    font-size: 1.5rem/* 24px */;
+    line-height: 2rem/* 32px */;
+    padding: 0.5rem;
+    top: 0.5rem;
+    color:#666;
+  }
+  /*
+  #sidenav{
+    display: none;
+  }
+  #sidenav:checked ~ div > aside.sidenav {
+    display: none;
+  }
+  #sidenav:checked ~ div > #Splitter {
+    display: none;
+  }
+  */
+  .pagenav {
+    width: 0;
+    
+  }
+  #pagenav:checked ~ div > aside.pagenav {
+    width: 200px;
+  }
+  @keyframes RightInn {
+    0% {
+      transform: translateX(200px);
+    }
+    100% {
+      transform: translateX(0);
+    }
+  }
+  @media (max-width: 768px) {
+    /*.sidenav,#Splitter {
+      display: nosne;
+    }
+    aside.sidenav{
+      display: none;
+      position: absolute;
+      left: 0px;
+      z-index: 2;
+      opacity: 0.9;
+    }
+    #sidenav:checked ~ div > #Splitter {
+      display: none;
+    }
+    #Splitter {
+      display: none;
+    }
+    */
+    #pagenav:checked ~ div > aside.pagenav {
+      position: absolute;
+      opacity: 0.8;
+      right: 0%;
+    }
+  }
+</style>
 

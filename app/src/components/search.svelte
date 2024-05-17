@@ -1,11 +1,10 @@
-<script>
+<script lang="ts">
   import { t } from "@/lib/i18n/i18n";
-  import { SearchObj } from "./stores.js";
+  import { SearchObj } from "@/lib/stores";
   import SearchList from "./search_list.svelte";
-
   export const word = "";
   let title = $t("common.navigate.select-00.label");
-  let concept = [];
+  let concept: any = [];
 
   let MIN = 0;
   let MAX = 0;
@@ -13,10 +12,7 @@
 
   let initialValue = 0;
 
-  $: inputValue = initialValue;
   $: {
-    if (initialValue < MIN) initialValue = MIN;
-    if (MAX < initialValue) initialValue = MAX;
     if ($SearchObj) {
       if ($SearchObj.id) {
         title = $SearchObj.id;
@@ -32,19 +28,16 @@
       } else {
         concept = {};
       }
-
-      console.log("concept", MAX, word, chunkSize, concept);
     } else {
       title = "";
       concept = {};
     }
   }
 
-  const getEndOfArray = (array) => array[array.length - 1];
+  const getEndOfArray = (array: any) => array[array.length - 1];
 
-  function previousChunk(lastValue) {
+  function previousChunk(lastValue: number) {
     const _last = lastValue ?? initialValue + 1;
-    //console.log("previousChunk", _last, MIN, chunkSize);
     if (_last <= MIN) return [];
     let array = [];
     for (let i = 0; i < chunkSize; i++) {
@@ -54,9 +47,8 @@
     return array.reverse();
   }
 
-  function nextChunk(lastValue) {
+  function nextChunk(lastValue: number) {
     const _last = lastValue ?? initialValue - 1;
-    //console.log("▶nextChunk:", _last, lastValue, MAX, chunkSize, initialValue);
     if (MAX <= _last) return [];
     let array = [];
     for (let i = 0; i < chunkSize; i++) {
@@ -65,16 +57,15 @@
       if (index < concept.length) array.push(_last + (i + 1));
       if (MAX <= getEndOfArray(array)) return array;
     }
-    //console.log("nextChunk#66:", array);
     return array;
   }
 
-  function addObject(array) {
+  function addObject(array: any) {
     //console.log("addObj", array);
     if (!array) return [];
-    let items = [];
+    let items: any = [];
 
-    array.forEach(function (i) {
+    array.forEach(function (i: number) {
       let temp = concept[i];
       //CodeSystem.countを連番として追加
       //https://hl7.org/fhir/R4/codesystem-definitions.html#CodeSystem.count
@@ -82,11 +73,9 @@
       items.push(temp);
     });
     //console.log("items", items);
-    return items;
-  }
+    if (Object.keys(items).length === 0) return;
 
-  function TEST() {
-    console.log("TEST");
+    return items;
   }
 </script>
 
@@ -95,13 +84,7 @@
    {#key}は指定した値が変わったときにブロック内の要素も更新
   -->
   {#key concept}
-    <SearchList
-      {nextChunk}
-      {previousChunk}
-      {addObject}
-      {chunkSize}
-      let:prop={value}
-    />
+    <SearchList {nextChunk} {previousChunk} {addObject} {chunkSize} />
   {/key}
 </div>
 

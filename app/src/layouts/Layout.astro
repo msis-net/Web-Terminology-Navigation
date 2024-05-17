@@ -1,17 +1,42 @@
 ---
-import Head from "@/layouts/_head.astro";
+//import Head from "@/layouts/_head.astro";
 interface Props {
-	title: string;
+  title: string;
 }
-
 const { title } = Astro.props;
 ---
-<!DOCTYPE html>
+
+<!doctype html>
 <html lang="">
-<head>
-  <Head title={title}/>
-</head>
-<body>
-  <slot />
-</body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="keywords"
+      content="hl7 terminorogy"
+    /><!--end::Primary Meta Tags--><!--begin::Fonts-->
+    <meta name="title" content="Web Terminorogy Navigator" />
+    <link rel="shortcut icon" href="favicon.ico" />
+    <!--Google font icons-->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@100..900&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200"
+    />
+    <link rel="stylesheet" href="/css/base.css" />
+    <link rel="stylesheet" href="/css/output.css" />
+    <!--Basicly not use
+    <script src="/js/alpine.js" defer></script>
+    -->
+    <script src="/js/wate.js" defer></script>
+    <title>{title}</title>
+  </head>
+  <body class="h-screen">
+    <slot />
+  </body>
 </html>

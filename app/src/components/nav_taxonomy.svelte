@@ -1,10 +1,10 @@
-<script>
+<script lang="ts">
   import { t } from "@/lib/i18n/i18n";
-  import { Resuoces } from "./stores.js";
+  import { Resuoces } from "@/lib/stores";
   import NavTaxonomyList from "./nav_taxonomy_list.svelte";
 
   let title = $t("common.navigate.select-00.label");
-  let concept = [];
+  let concept: any = [];
 
   let MIN = 0;
   let MAX = 0;
@@ -12,11 +12,7 @@
 
   let initialValue = 0;
 
-  $: inputValue = initialValue;
   $: {
-    console.log("$Resuoce", $Resuoces);
-    if (initialValue < MIN) initialValue = MIN;
-    if (MAX < initialValue) initialValue = MAX;
     if ($Resuoces) {
       if ($Resuoces.id) {
         title = $Resuoces.id;
@@ -32,19 +28,16 @@
       } else {
         concept = {};
       }
-
-      console.log("concept", MAX, chunkSize, concept);
     } else {
       title = "";
       concept = {};
     }
   }
 
-  const getEndOfArray = (array) => array[array.length - 1];
+  const getEndOfArray = (array: any) => array[array.length - 1];
 
-  function previousChunk(lastValue) {
+  function previousChunk(lastValue: number) {
     const _last = lastValue ?? initialValue + 1;
-    //console.log("previousChunk", _last, MIN, chunkSize);
     if (_last <= MIN) return [];
     let array = [];
     for (let i = 0; i < chunkSize; i++) {
@@ -54,9 +47,8 @@
     return array.reverse();
   }
 
-  function nextChunk(lastValue) {
+  function nextChunk(lastValue: number) {
     const _last = lastValue ?? initialValue - 1;
-    //console.log("▶nextChunk:", _last, lastValue, MAX, chunkSize, initialValue);
     if (MAX <= _last) return [];
     let array = [];
     for (let i = 0; i < chunkSize; i++) {
@@ -65,43 +57,29 @@
       if (index < concept.length) array.push(_last + (i + 1));
       if (MAX <= getEndOfArray(array)) return array;
     }
-    //console.log("nextChunk#66:", array);
     return array;
   }
 
-  function addObject(array) {
-    //console.log("addObj", array);
+  function addObject(array: any) {
     if (!array) return [];
-    let items = [];
+    let items: any = [];
 
-    array.forEach(function (i) {
+    array.forEach(function (i: number) {
       let temp = concept[i];
-      //CodeSystem.countを連番として追加
-      //https://hl7.org/fhir/R4/codesystem-definitions.html#CodeSystem.count
       temp["count"] = i + 1;
       items.push(temp);
     });
-    //console.log("items", items);
     return items;
-  }
-
-  function TEST() {
-    console.log("TEST");
   }
 </script>
 
-<div class="numbers h-full text-[0.8em] bg-none p-0">
+<div class="hidden">{title}</div>
+<div class="numbers h-full text-[0.8em] bg-none p-1">
   <!--
    {#key}は指定した値が変わったときにブロック内の要素も更新
   -->
   {#key concept}
-    <NavTaxonomyList
-      {nextChunk}
-      {previousChunk}
-      {addObject}
-      {chunkSize}
-      let:prop={value}
-    />
+    <NavTaxonomyList {nextChunk} {previousChunk} {addObject} {chunkSize} />
   {/key}
 </div>
 

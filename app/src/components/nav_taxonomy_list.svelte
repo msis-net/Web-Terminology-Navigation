@@ -1,96 +1,54 @@
-<script>
+<script lang="ts">
   import { tick } from "svelte";
-  import { Position } from "./stores.js";
   import NavTaxonomyChilds from "@/components/nav_taxonomy_childs.svelte";
-  export let previousChunk = undefined;
-  export let nextChunk = undefined;
-  export let addObject = undefined;
-  export let chunkSize = 0;
+  export let previousChunk: (lastValue: number) => number[];
+  export let nextChunk: (lastValue: number) => number[];
+  export let addObject: (array: number[]) => any[];
+  export let chunkSize: number = 0;
 
   const maxRetryCountOnPreLoad = 5;
   const triggerRangeRatio = 0.01;
 
-  let list = [];
-  let list_swap = []; //表示内容の配列
-  let list_buff = 2; //リストのバッファ
+  let list: number[] = [];
+  let list_swap: number[] = []; // 表示内容の配列
+
   let loadCount = 0; //Scrollが表示されている場合は「１」以上
 
-  let json = []; //追加
-  let container;
+  let json: any[] = [];
+  let container: any;
   let clientHeight = 0;
 
   let loading = false;
   $: triggerRange = clientHeight * triggerRangeRatio;
-  $: chunkSize = chunkSize;
-  $: {
-    console.log("$Position", $Position);
-    //mvScroll($Position);
-  }
 
-  async function mvScroll(y) {
+  async function mvScroll(y: number) {
     //container.scrollTo(0, num);
     loadCount = 0;
     await preLoad();
-    const { top, right, bottom, left } = container.getBoundingClientRect();
-    /*console.log(
-      "mvScroll",
-      loadCount,
-      container.scrollTop,
-      y,
-      container.clientHeight,
-      top
-    );*/
+    const { top } = container.getBoundingClientRect();
 
     if (loadCount > 0) {
       //現在位置(container.scrollTop )からの差分(y)が目標位置:178は親オブジェクト
       container.scrollTo(0, container.scrollTop + y - top);
     }
-    /*container.scrollTo(0, id);
-    let n = 1;
-    while (true) {
-      container.scrollTo(0, n);
-      n++;
-      if (n > 300) break;
-    }
-    const firstChild = container.firstElementChild;
-    console.log("firstChild", firstChild);
-    */
   }
   /**
    * 上方向のデータをロードします。
    */
   async function loadPrevious() {
-    //console.log("loadPrevious:loading", loading);
     if (!previousChunk) return;
-
-    const beforeScrollHeight = container.scrollHeight;
-    const beforeScrollTop = container.scrollTop;
-    //const prev = await previousChunk(list.length === 0 ? null : list[0]);
-
     const swap_index = list_swap.length - loadCount - 2;
-    //console.log("loadPrevious",list_swap.length,list_swap,loadCount,swap_index)
     if (swap_index < 0) return;
-    //console.log("loadPrevious:swap_index",swap_index, list_swap[swap_index]);
     //追加items：
-    const items = await addObject(list_swap[swap_index]);
-    //console.log("loadPrevious:items", items);
-    //jsonの後列を省く
-    //console.log("□loadPrevious:json", json.length,json);
-    //console.log("□loadPrevious:list", list.length,list);
+    const items = await addObject([list_swap[swap_index]]);
+
     json.splice(json.length - items.length, items.length);
     list.splice(list.length - items.length, items.length);
     list_swap.splice(list_swap.length - 1, 1);
 
-    json = [...items, ...json];
+    json: [] = [...items, ...json];
     await tick();
-    //console.log("□□loadPrevious:json", json.length,json);
-    //console.log("□□loadPrevious:list", list.length,list);
-    //console.log("□□loadPrevious:scrollTo", container.scrollHeight - beforeScrollHeight + beforeScrollTop);
-    /*
-    if (prev.length === 0) return;
-    list = [...prev, ...list];
-    await tick();
-     */
+
     container.scrollTo(0, chunkSize);
   }
 
@@ -98,34 +56,23 @@
    * 下方向のデータをロードします。
    */
   async function loadNext() {
-    //console.log("loadNext:loading", loading);
     if (!nextChunk) return;
     let beforeScrollTop = container.scrollTop;
-    const next = await nextChunk(
-      list.length === 0 ? null : list[list.length - 1]
-    );
+    const next: number[] = await nextChunk(list[list.length - 1]);
     if (next.length === 0) return;
-    //console.log("loadNext:next", next);
-    list_swap.push(next);
+    list_swap = [...list_swap, ...next];
     list = [...list, ...next];
-    //console.log("loadNext:list", list);
-
     //追加items：
     const items = await addObject(next);
 
     if (json.length > chunkSize * loadCount) {
-      //console.log("▶▶▶json", json.length, json);
       json.splice(0, items.length);
-      //console.log("▶▶▶tmp", tmp.length, tmp);
       beforeScrollTop = beforeScrollTop * 0.9;
     }
 
     json = [...json, ...items];
     await tick();
 
-    //console.log("loadNext:items", items.length, json.length > items.length * 2);
-    //console.log("■loadNext:json", json.length,json);
-    //console.log("■loadNext:list", list.length,list,beforeScrollTop);
     container.scrollTo(0, beforeScrollTop);
   }
 
@@ -138,7 +85,7 @@
     loading = true;
     //console.log("loadCount", loadCount, maxRetryCountOnPreLoad);
     try {
-      const loadInternal = async (loadFunc) => {
+      const loadInternal = async (loadFunc: any) => {
         while (
           loadCount === 0 ||
           container.scrollHeight <= container.clientHeight
@@ -155,11 +102,8 @@
       };
       await loadInternal(loadNext);
       await tick();
-      //await loadInternal(loadPrevious);
-      //await tick();
     } finally {
       loading = false;
-      //console.log("loadCount", loadCount, maxRetryCountOnPreLoad);
     }
   }
 
@@ -170,15 +114,7 @@
     if (!container) return;
     if (loading) return;
     loading = true;
-    /*
-    console.log(
-      triggerRange,
-      container.scrollHeight,
-      container.clientHeight,
-      container.scrollTop,
-      container.clientHeight + container.scrollTop
-    );
-*/
+
     try {
       if (
         !!previousChunk &&
@@ -188,8 +124,6 @@
         await loadPrevious();
       } else if (
         !!nextChunk &&
-        // container.scrollHeight <=
-        //  container.clientHeight + container.scrollTop + triggerRange
         container.scrollTop >=
           container.scrollHeight - container.clientHeight - triggerRange
       ) {
@@ -202,13 +136,13 @@
 
   async function init() {
     list = [];
-    await tick();
-    await preLoad();
+    await tick(); //DOM更新が完了を待つ
+    await preLoad(); //初期動作を実行する。
   }
 
   init();
 
-  //画面リサイズ：縦方向拡大でスクロールバーが消えた時
+  //画面リサイズ：縦方向拡大でスクロールバーが消えた時、次候補がある場合は読込を追加
   let innerHeight = window.innerHeight;
   async function reSize() {
     //console.log(container.scrollHeight, container.clientHeight);
@@ -222,15 +156,9 @@
 
 <div class="container" bind:clientHeight bind:this={container} on:scroll={load}>
   {#key json}
-    {#each json as value, i}
+    {#each json as value}
       <!--slot prop={value} {i} /-->
-      <NavTaxonomyChilds
-        obj={value}
-        {value}
-        id={value.counter}
-        indent={1}
-        {mvScroll}
-      />
+      <NavTaxonomyChilds obj={value} indent={1} {mvScroll} />
     {/each}
   {/key}
 </div>

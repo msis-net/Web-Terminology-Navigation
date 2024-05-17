@@ -1,0 +1,168 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import Navbar from "@/components/_navbar.svelte";
+import Sidenav from "@/components/_sidenav.svelte";
+import Pagenav from "@/components/_pagenav.svelte";
+
+import Content from "@/components/_content.svelte";
+const appname = "Webapp";
+---
+
+<Layout title={appname}>
+  <!-- toggle section -->
+  <input type="checkbox" id="sidenav" class="hidden" />
+  <label for="sidenav">
+    <span id="sidenav_btn" class="material-symbols-outlined">
+      menu
+    </span>
+  </label>
+  <!-- toggle section -->
+  <input type="checkbox" id="pagenav" class="hidden" />
+  <label for="pagenav">
+    <span
+      id="pagenav_btn"
+      class="material-symbols-outlined absolute text-2xl right-0 p-2 top-2 text-gray-500"
+    >
+      right_panel_open
+    </span>
+  </label>
+<!--Main -->
+  <nav class="flex nav-height">
+    <Navbar label="Navbar" client:only="svelte" />
+  </nav>
+  <div class="content-wrapp flex bg-white">
+    <aside id="LeftFrame" class="sidenav order-first overflow-y-auto">
+      <Sidenav title="sidenav" client:only="svelte" />
+    </aside>
+
+    <div id="Splitter" class="w-1 bg-slate-300 cursor-col-resize"></div>
+
+    <main class="flex-1 bg-yellow-50">
+      <Content label="Content" client:only="svelte" />
+    </main>
+    <aside class="pagenav overflow-y-auto">
+      <Pagenav label="Pagenav" client:only="svelte" />
+    </aside>
+  </div>
+
+</Layout>
+<script>
+    //Spliter
+    let StartDrag = false;
+
+    window.onload = onLoad;
+
+    function onLoad() {
+      const splitter = document.querySelector("#Splitter");
+      const leftFrame = document.querySelector("#LeftFrame");
+
+      if (splitter) {
+        splitter.addEventListener("mousedown", () => {
+          StartDrag = true;
+        });
+      }
+
+      document.addEventListener("mouseup", (e) => {
+        if (StartDrag == true) {
+          StartDrag = false;
+          const size = `${e.x}px`;
+          if (leftFrame instanceof HTMLElement) {
+            leftFrame.style.flexBasis = size;
+          }
+        }
+      });
+      document.addEventListener("mousemove", (e) => {
+        if (StartDrag == true) {
+          const size = `${e.x}px`;
+          if (leftFrame instanceof HTMLElement) {
+            leftFrame.style.flexBasis = size;
+          }
+        }
+      });
+    }
+</script>
+<style>
+    * {
+    user-select: none;
+  }
+    /*background-color*/
+  aside.sidenav {
+    background-color: #a7d8de;
+    width: 15rem;
+    transition-property: all;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    transition-duration: 0.2s;
+  }
+  nav {
+    background-color: #ffcd6a;
+  }
+  main {
+    background-color: #80a0d4;
+  }
+  aside.pagenav {
+    background-color: #9f8dbf;
+    transition-property: all;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    transition-duration: 0.2s;
+  }
+
+
+/**/
+  #sidenav_btn,
+  #pagenav_btn {
+    cursor: pointer;
+    z-index: 2;
+  }
+  #sidenav_btn{
+    position: absolute;
+    font-size: 1.5rem/* 24px */;
+    line-height: 2rem/* 32px */;
+    padding: 0.5rem;
+    top: 0.5rem;
+    color:#666;
+  }
+  #sidenav{
+    display: none;
+  }
+  #sidenav:checked ~ div > aside.sidenav {
+    display: none;
+  }
+  #sidenav:checked ~ div > #Splitter {
+    display: none;
+  }
+  .pagenav {
+    width: 0;
+    
+  }
+  #pagenav:checked ~ div > aside.pagenav {
+    width: 200px;
+  }
+  @keyframes RightInn {
+    0% {
+      transform: translateX(200px);
+    }
+    100% {
+      transform: translateX(0);
+    }
+  }
+  @media (max-width: 768px) {
+    .sidenav,#Splitter {
+      display: nosne;
+    }
+    aside.sidenav{
+      position: absolute;
+      left: 0px;
+      z-index: 2;
+      opacity: 0.9;
+    }
+    #Splitter {
+      display: none;
+    }
+    #pagenav:checked ~ div > aside.pagenav {
+      position: absolute;
+      opacity: 0.8;
+      right: 0%;
+    }
+  }
+</style>
+

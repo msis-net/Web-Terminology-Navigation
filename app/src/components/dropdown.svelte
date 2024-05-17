@@ -1,20 +1,26 @@
-<script>
-  import { t, loadTranslations } from "@/lib/i18n/i18n";
+<script lang="ts">
+  import { t } from "@/lib/i18n/i18n";
   import {
     CodeSystem,
     Resuoces,
     SearchObj,
-    Arguments,
+    SearchStr,
     Concept,
-    language,
     OpenTab,
     schpanel,
     Openkey,
-  } from "./stores.js";
+  } from "@/lib/stores";
   import Search from "./search.svelte";
-  import { readonly } from "svelte/store";
 
-  let selectof = {};
+  type listtype = {
+    id: number;
+    store: string;
+    name: string;
+    path: string;
+    param: string;
+  };
+
+  let selectof: listtype;
   let count = 0;
   let SearchResult = "";
 
@@ -23,7 +29,6 @@
     $SearchObj = {};
     $Concept = [];
     $Openkey = "";
-    $Arguments = "";
     word = "";
     $OpenTab = 1;
     $schpanel = "invisible";
@@ -31,21 +36,20 @@
 
   const onChange = () => {
     objInit();
-    //console.log("selectof", selectof);
     $CodeSystem = selectof.id;
-    const name = selectof.name;
+
     const path = selectof.path;
     const param = selectof.param;
     const url = path + param;
-    //console.log("$CodeSystem ", $CodeSystem, url);
-    //get_data(url);
-    get_strage(url, name);
+    get_strage(url);
   };
+
   //通常のfetch処理：データ量無視
-  async function get_strage(path, name) {
-    console.log("path", path);
+  async function get_strage(path: string) {
     await fetch(path) //読込
-      .then((response) => response.json())
+      .then((response) => {
+        return response.json();
+      })
       .then((result) => {
         $Resuoces = result;
         count = $Resuoces["concept"].length;
@@ -55,7 +59,8 @@
       });
   }
 
-  async function get_stream(path) {
+  /*
+  async function get_stream(path: string) {
     //console.log("path", path);
     await fetch(path) //読込
       //
@@ -88,7 +93,8 @@
         });
       });
   }
-
+  */
+  /*
   //通常のfetch処理：データ量無視
   async function get_data(path) {
     //console.log("path", path);
@@ -101,7 +107,7 @@
         console.error(err);
       });
   }
-
+  */
   const itemList = [
     {
       id: 1,
@@ -159,20 +165,18 @@
     },*/,
   ];
   //selectの初期値の設定
-  let initval = selectof;
-  let Result = $t("common.navigate.Result");
+  let initval = itemList[0];
+
   let word = "";
-  let searchData;
   //検索Popup
 
   const SearchWord = () => {
-    console.log("word", word);
     $SearchObj = {};
     let tmpConcept = [];
+    let schcount = 0;
     if (word.length > 0) {
-      $Arguments = word;
       let Arg = word.split(/[\s|,|、|　]/);
-      //console.log("Arg", Arg, Arg.length);
+      $SearchStr = word;
       for (let i in $Resuoces["concept"]) {
         let tmpObj = $Resuoces["concept"][i];
 
@@ -180,25 +184,25 @@
         for (let n in Arg) {
           const regex = new RegExp(Arg[n], "gi");
           const comparison = regex.test(schStr);
-
           if (comparison) {
             tmpConcept.push(tmpObj);
-            //$OpenTab = 2;
-            //schpanel = "visible";
+            const matches = schStr.match(regex);
+            if (matches) {
+              schcount += matches.length;
+            }
             break; //1つでも見つかったら登録して抜ける
           }
-          const match = regex.test(schStr);
-          console.log("match", match.length, match);
         }
       }
     }
-    $SearchObj = tmpConcept;
-    if ($SearchObj.length === 0) {
+
+    if (Object.keys(tmpConcept).length === 0) {
       SearchResult = $t("common.navigate.NoResults");
     } else {
       //SearchResult = tmpConcept.length + " " + $t("common.navigate.BeResults");
-      SearchResult =
-        $t("common.navigate.Result") + ":" + tmpConcept.length.toLocaleString();
+      $SearchObj = tmpConcept;
+
+      SearchResult = $t("common.navigate.Result") + ":" + schcount;
     }
     $schpanel = "visible";
   };
@@ -225,27 +229,28 @@
     </div>
     <button class="text-[0.8em] h-4 leading-4 m-2 p-1"></button>
   </div>
-  <!--検索文字-->
+  <!--文字列検索-->
   <div class="relative group mt-2">
     <input
-      class="w-full bg-white border border-gray-300 text-gray-900 text-sm rounded-md p-1"
+      class="w-full border border-gray-300 text-gray-900 text-sm rounded-md p-2"
       placeholder={selectof == initval
         ? $t("common.navigate.select-00.label")
         : $t("common.navigate.SearchWord")}
-      readonly={selectof == initval ? true : false}
+      readonly={count == 0 ? true : false}
       bind:value={word}
       on:keydown={(e) => {
         if (e.key === "Enter") {
           SearchWord();
         }
       }}
+      disabled={count == 0 ? true : false}
     />
     <div
-      class="{$schpanel} p-2 opacity-100 absolute w-full bg-white text-gray-800 border border-gray-300 rounded-md shadow-lg z-10 overflow-y-auto max-h-[500px]"
+      class="{$schpanel} p-2 opacity-100 absolute w-full bg-yellow-50 text-gray-800 border border-gray-300 rounded-md shadow-lg z-10 overflow-y-auto max-h-[500px]"
     >
       <header class="h-7">
         <div class="mx-2 flex text-[1.0em] text-gray-500">
-          <div cass="">{SearchResult}</div>
+          <div>{SearchResult}</div>
           <button
             class=" text-[1.2em] ml-auto"
             on:click={() => ($schpanel = "invisible")}>x</button
@@ -256,13 +261,5 @@
         <Search />
       </div>
     </div>
-    <!--
-<div
-      class="opacity-0 invisible group-hover:opacity-100 group-hover:visible absolute w-48 mt-2 bg-white text-gray-800 border border-gray-300 rounded-lg shadow-lg py-2 z-10"
-    >
-      <p class="px-4 py-2">This is a popover component.</p>
-      <p class="px-4 py-2">You can customize it with your content.</p>
-    </div>
-    -->
   </div>
 </div>

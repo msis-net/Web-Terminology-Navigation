@@ -1,0 +1,23 @@
+.arrow {
+  cursor: pointer;
+  display: inline-block;
+  /* transition: transform 200ms; */
+}
+.arrowDown {
+  transform: rotate(90deg);
+}
+.col-1 {
+  color: #2364aa;
+}
+.col-2 {
+  color: #fec601;
+}
+.col-3 {
+  color: #73bfb8;
+}
+.col-4 {
+  color: #ea7317;
+}
+.col-5 {
+  color: #3da5d9;
+}

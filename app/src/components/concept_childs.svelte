@@ -1,7 +1,7 @@
 <script>
   import { tick } from "svelte";
   import { fade } from "svelte/transition";
-  import { Arguments, schpanel } from "./stores.js";
+  import { SearchStr, schpanel } from "@/lib/stores";
   import ConceptChilds from "./concept_childs.svelte";
   export let value = "";
   export let indent = 0;
@@ -14,12 +14,15 @@
   }
 
   function eventObject() {
-    //console.log("Arguments", $Arguments);
+    console.log("SearchStr", $SearchStr);
     //console.log(json, Object.keys(json).length);
 
     if (Object.keys(json).length == 0) {
       //json = obj;
-      let Arg = $Arguments.split(/[\s|,|、|　]/);
+      let Arg = [];
+      if ($SearchStr) {
+        Arg = $SearchStr.split(/[\s|,|、|　]/);
+      }
       try {
         //concept = obj["concept"];
         const keys = Object.keys(obj);
@@ -71,7 +74,7 @@
 
   function display(text) {
     if (text) {
-      let Arg = $Arguments.split(/[\s|,|、|　]/);
+      let Arg = $SearchStr.split(/[\s|,|、|　]/);
       for (let n in Arg) {
         const regex = new RegExp(Arg[n], "gi");
         let result = text.match(regex);
