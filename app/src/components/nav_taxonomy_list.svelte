@@ -7,30 +7,54 @@
   export let addObject = undefined;
   export let chunkSize = 0;
 
-  const maxRetryCountOnPreLoad = 20;
+  const maxRetryCountOnPreLoad = 5;
   const triggerRangeRatio = 0.01;
 
   let list = [];
   let list_swap = []; //表示内容の配列
   let list_buff = 2; //リストのバッファ
-  let loadCount = 0;
+  let loadCount = 0; //Scrollが表示されている場合は「１」以上
 
   let json = []; //追加
   let container;
   let clientHeight = 0;
+
   let loading = false;
   $: triggerRange = clientHeight * triggerRangeRatio;
   $: chunkSize = chunkSize;
   $: {
-    if ($Position > 0) {
-      console.log("$Position", $Position);
-      mvScroll($Position);
-    }
+    console.log("$Position", $Position);
+    //mvScroll($Position);
   }
 
-  function mvScroll(num) {
-    container.scrollTo(0, num);
-    console.log("scrollTop", container.scrollTop);
+  async function mvScroll(y) {
+    //container.scrollTo(0, num);
+    loadCount = 0;
+    await preLoad();
+    const { top, right, bottom, left } = container.getBoundingClientRect();
+    /*console.log(
+      "mvScroll",
+      loadCount,
+      container.scrollTop,
+      y,
+      container.clientHeight,
+      top
+    );*/
+
+    if (loadCount > 0) {
+      //現在位置(container.scrollTop )からの差分(y)が目標位置:178は親オブジェクト
+      container.scrollTo(0, container.scrollTop + y - top);
+    }
+    /*container.scrollTo(0, id);
+    let n = 1;
+    while (true) {
+      container.scrollTo(0, n);
+      n++;
+      if (n > 300) break;
+    }
+    const firstChild = container.firstElementChild;
+    console.log("firstChild", firstChild);
+    */
   }
   /**
    * 上方向のデータをロードします。
@@ -112,6 +136,7 @@
     if (!container) return;
     if (loading) return;
     loading = true;
+    //console.log("loadCount", loadCount, maxRetryCountOnPreLoad);
     try {
       const loadInternal = async (loadFunc) => {
         while (
@@ -123,6 +148,7 @@
           if (list.length === 0) return;
           await tick();
           if (maxRetryCountOnPreLoad < loadCount) {
+            loadCount = 0; //リトライのみでbreakした場合はScrollが表示されない
             break;
           }
         }
@@ -133,7 +159,7 @@
       //await tick();
     } finally {
       loading = false;
-      console.log("loadCount", loadCount);
+      //console.log("loadCount", loadCount, maxRetryCountOnPreLoad);
     }
   }
 
@@ -198,7 +224,13 @@
   {#key json}
     {#each json as value, i}
       <!--slot prop={value} {i} /-->
-      <NavTaxonomyChilds obj={value} {value} id={value.counter} indent={1} />
+      <NavTaxonomyChilds
+        obj={value}
+        {value}
+        id={value.counter}
+        indent={1}
+        {mvScroll}
+      />
     {/each}
   {/key}
 </div>

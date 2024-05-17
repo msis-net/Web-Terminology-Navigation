@@ -18,7 +18,7 @@ export const Concept = writable({})
 export const schpanel = writable("invisible");
 export const Openkey = writable("")
 export const Label = writable("")
-export const Position = writable(0)
+export const Position = writable("")
 export async function getJonResource(path) {
     const res = await fetch(path);
     if (res.ok) {

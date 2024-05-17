@@ -204,8 +204,7 @@
   };
 </script>
 
-<svelte></svelte>
-<div class="max-w-sm mx-auto mb-2">
+<div class="max-w-sm mx-auto mb-2 ml-0">
   <div class="flex">
     <select
       id="countries"
