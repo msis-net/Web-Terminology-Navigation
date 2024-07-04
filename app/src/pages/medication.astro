@@ -1,0 +1,8 @@
+---
+import Layout from "@/layouts/Layout.astro";
+import Medical from "@/components/medication.svelte";
+const appname = "Webapp";
+---
+<Layout title={appname}>
+  <Medical client:only="svelte" />
+</Layout>
